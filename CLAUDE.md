@@ -2,6 +2,22 @@
 
 An offline drill app for German grammar: verb/adjective/noun + preposition + case (Rektion), case sorting, and the article table. It runs as a home-screen web app on iPhone Safari and in desktop browsers. It is hosted on GitHub Pages at https://twarn247.github.io/kasusschloss/ and served from `main`, root folder.
 
+## Curriculum: the source of truth
+
+`curriculum.json` defines what gets taught and in what order: 58 units in 7 tracks (WO, CASE, VERB, REK, MOOD, CL, ST). It also holds the `requires`/`unlocks` prerequisite graph, the 6 drill types, the mastery levels (working / fluent / retained), the learner's placement and diagnosed gaps, and which units the app already covers. When it disagrees with anything else in the repo, the curriculum wins. Don't change its units, edges or mastery rules without the user's say-so. Propose the change instead.
+
+- Content is built **one unit per task**, only when the user asks for that unit. Don't write lesson content for other units along the way.
+- Every content item says which unit(s) it belongs to, so progress rolls up to units.
+- `ROADMAP.md` describes how the app will load the graph and track unit states.
+
+## Content accuracy
+
+Translations, meanings, cases, example sentences and confusers must be correct. Never write or change any of them on an assumption.
+
+- Check each item against a reference (Duden, DWDS, Langenscheidt/PONS, or a grammar reference such as Hammer's German Grammar for rules). Example sentences must be natural German, not literal English.
+- List anything you're not certain of for the user to check, instead of shipping it. A missing item is better than a wrong one: wrong items get drilled into memory at speed.
+- When adding content, say which sources were used and which items were flagged.
+
 ## Files
 
 - `index.html`: markup and CSS. It loads `js/main.js` as a module, and shows a note when opened from `file://`, where modules can't load.
@@ -50,7 +66,8 @@ The app follows these. New drills should too.
 ## The learner
 
 - Self-studying German toward C2. Currently around A2/B1.
-- Diagnosed gaps: **Rektion** (verb/adjective/noun + preposition + case) and **Konjunktiv II**.
+- Diagnosed gaps: **Rektion** (verb/adjective/noun + preposition + case) and **Konjunktiv II**. The exact units are in `curriculum.json` → `learner` (placement: Goethe "Test your German" 16/30).
+- Wants the app to show what has improved, especially former weak spots, at both the word level and the topic level, and to make it clear when a unit is solid enough to move on.
 - Also uses Anki, so this app should do what Anki can't (timed fluency, near-miss discrimination, case sorting) rather than duplicate plain flashcards.
 - Studies on desktop (keyboard shortcuts matter) and iPhone (tap targets, no hover-only information).
 - Prefers free tools.
@@ -59,4 +76,4 @@ The app follows these. New drills should too.
 
 - See `ROADMAP.md` for the planned structure. Don't build roadmap items unless asked.
 - Keep the existing visual language: the CSS variables in `:root`, Akk blue, Dat amber, switcher purple, and both light and dark themes.
-- Content must be correct German. When unsure about a case or a preposition, say so instead of guessing.
+- Content must be correct German. See "Content accuracy" above.

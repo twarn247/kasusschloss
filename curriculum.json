@@ -1,0 +1,1311 @@
+{
+  "version": 1,
+  "about": "Prerequisite graph for a German grammar trainer. 'requires' edges are hard prerequisites; 'sequence' is one valid study order (topological, level-first).",
+  "levels": [
+    "A1",
+    "A2",
+    "B1",
+    "B2",
+    "C1",
+    "C2"
+  ],
+  "tracks": {
+    "WO": {
+      "name": "Word order",
+      "why": "German word order is acquired in a fixed sequence (Pienemann's stages). Teaching a stage before the previous one is stable doesn't stick, so this track's order is not negotiable."
+    },
+    "CASE": {
+      "name": "Case and the noun phrase",
+      "why": "L2 learners move from one case, to nominative vs. 'other', to a full three-case system. Accusative and dative must be separated before Rektion can work."
+    },
+    "VERB": {
+      "name": "Verb forms and tenses",
+      "why": "Forms the other tracks lean on: Konjunktiv II needs Präteritum stems, passive needs participles, double infinitives need modals in Perfekt."
+    },
+    "REK": {
+      "name": "Rektion (valency)",
+      "why": "Which preposition and case a verb, adjective or noun takes, and what the pair means. TW's diagnosed gap; Kasusschloss already covers REK2 and part of REK3."
+    },
+    "MOOD": {
+      "name": "Mood: Konjunktiv II and I",
+      "why": "Hypotheticals, politeness, counterfactuals, reported speech. TW's other diagnosed gap."
+    },
+    "CL": {
+      "name": "Clauses and connectors",
+      "why": "Joining clauses, and knowing what each connector does to word order."
+    },
+    "ST": {
+      "name": "Style and register (C-level)",
+      "why": "What separates C1/C2 from B2: compression, nominal style, particles, inferential modals."
+    }
+  },
+  "drill_types": {
+    "SORT": "Categorize under time pressure (like Case sprint). Best for: which bin does this belong in?",
+    "MEANING": "Multiple choice with near-miss distractors, both directions (like Bedeutung). Best for: what does this mean / which form means this?",
+    "PRODUCE": "Type the form from a cue (article, ending, verb form). Exact-match grading.",
+    "CLOZE": "Sentence with one gap; type the missing word (like Sentence card). Feedback shows typed → correct → rule.",
+    "ORDER": "Tap shuffled sentence chunks into the right order. The only drill that directly trains word order.",
+    "TRANSFORM": "Rewrite a sentence (active→passive, weil→wegen, direct→reported speech). Grade against a small set of accepted answers."
+  },
+  "mastery": {
+    "working": "accuracy >= 85% over the last 20 attempts. Enough to unlock dependents.",
+    "fluent": "accuracy >= 95% AND at or above the unit's rate aim in a 1-minute sprint.",
+    "retained": "still fluent on a check at least 3 days after reaching fluent. Only retained units drop to maintenance review."
+  },
+  "learner": {
+    "placement": "Roughly A2/B1 (Goethe 'Test your German' 16/30). Treat A1 units and most A2 units as probably known: verify with a short placement probe per unit instead of teaching from scratch.",
+    "diagnosed_gaps": [
+      "REK2",
+      "REK3",
+      "REK4",
+      "REK5",
+      "MOOD2",
+      "MOOD3",
+      "MOOD4",
+      "MOOD5",
+      "MOOD6"
+    ],
+    "already_in_app": [
+      "CASE3",
+      "CASE4",
+      "REK2",
+      "REK3"
+    ]
+  },
+  "units": [
+    {
+      "id": "WO1",
+      "track": "WO",
+      "level": "A1",
+      "title": "Verb second in main clauses",
+      "requires": [],
+      "scope": "Subject first, finite verb in position 2. Statements and W-questions; yes/no questions verb-first.",
+      "drills": [
+        "ORDER"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 1,
+      "unlocks": [
+        "WO2",
+        "WO3"
+      ]
+    },
+    {
+      "id": "WO2",
+      "track": "WO",
+      "level": "A1",
+      "title": "Coordinating conjunctions keep main-clause order",
+      "requires": [
+        "WO1"
+      ],
+      "scope": "und, aber, oder, denn, sondern sit in 'position 0' and change nothing.",
+      "drills": [
+        "SORT",
+        "ORDER"
+      ],
+      "english_trap": "denn means because but behaves like und, not like weil.",
+      "tags": [],
+      "sequence": 2,
+      "unlocks": []
+    },
+    {
+      "id": "VERB1",
+      "track": "VERB",
+      "level": "A1",
+      "title": "Present tense",
+      "requires": [],
+      "scope": "Regular endings, sein/haben, stem-changing verbs (fahren → fährt, sehen → sieht).",
+      "drills": [
+        "PRODUCE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 3,
+      "unlocks": [
+        "VERB2",
+        "VERB3",
+        "VERB4",
+        "VERB5",
+        "VERB6"
+      ]
+    },
+    {
+      "id": "VERB2",
+      "track": "VERB",
+      "level": "A1",
+      "title": "Modal verbs",
+      "requires": [
+        "VERB1"
+      ],
+      "scope": "können, müssen, dürfen, sollen, wollen, mögen/möchten; no -t in er/sie/es.",
+      "drills": [
+        "PRODUCE",
+        "MEANING"
+      ],
+      "english_trap": "muss nicht = don't have to; darf nicht = must not.",
+      "tags": [],
+      "sequence": 4,
+      "unlocks": [
+        "WO3",
+        "WO8",
+        "VERB9",
+        "MOOD1",
+        "ST4"
+      ]
+    },
+    {
+      "id": "VERB3",
+      "track": "VERB",
+      "level": "A1",
+      "title": "Separable and inseparable prefixes",
+      "requires": [
+        "VERB1"
+      ],
+      "scope": "an-, auf-, aus-, ein-, mit-, zu- split off; be-, er-, ver-, zer-, ge-, emp-, ent-, miss- never do.",
+      "drills": [
+        "SORT",
+        "PRODUCE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 5,
+      "unlocks": [
+        "WO3",
+        "VERB5"
+      ]
+    },
+    {
+      "id": "WO3",
+      "track": "WO",
+      "level": "A1",
+      "title": "The sentence bracket (Satzklammer)",
+      "requires": [
+        "WO1",
+        "VERB2",
+        "VERB3"
+      ],
+      "scope": "Modal + infinitive at the end; separable prefix at the end. Pienemann's stage 'verb separation'.",
+      "drills": [
+        "ORDER",
+        "CLOZE"
+      ],
+      "english_trap": "English keeps verb parts together: 'I must today work' feels wrong but is the German shape.",
+      "tags": [],
+      "sequence": 6,
+      "unlocks": [
+        "WO4",
+        "VERB5",
+        "VERB9",
+        "CL3"
+      ]
+    },
+    {
+      "id": "CASE1",
+      "track": "CASE",
+      "level": "A1",
+      "title": "Gender, nominative and plurals",
+      "requires": [],
+      "scope": "der/die/das, ein/eine, kein; the main plural patterns.",
+      "drills": [
+        "SORT",
+        "PRODUCE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 7,
+      "unlocks": [
+        "CASE2"
+      ]
+    },
+    {
+      "id": "CASE2",
+      "track": "CASE",
+      "level": "A1",
+      "title": "Accusative: direct objects",
+      "requires": [
+        "CASE1"
+      ],
+      "scope": "Only masculine changes (den/einen); pronouns mich, dich, ihn, uns, euch, sie.",
+      "drills": [
+        "SORT",
+        "PRODUCE",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 8,
+      "unlocks": [
+        "CASE3",
+        "CASE4"
+      ]
+    },
+    {
+      "id": "VERB4",
+      "track": "VERB",
+      "level": "A1",
+      "title": "Imperative",
+      "requires": [
+        "VERB1"
+      ],
+      "scope": "du/ihr/Sie forms, including sei and stem changes (lies!, gib!).",
+      "drills": [
+        "PRODUCE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 9,
+      "unlocks": []
+    },
+    {
+      "id": "WO4",
+      "track": "WO",
+      "level": "A2",
+      "title": "Inversion after a fronted element",
+      "requires": [
+        "WO3"
+      ],
+      "scope": "Anything in position 1 (Heute, Dann, Im Sommer) pushes the subject after the verb. Acquired after the bracket.",
+      "drills": [
+        "ORDER",
+        "SORT"
+      ],
+      "english_trap": "'Today I go' → Heute gehe ich, never Heute ich gehe.",
+      "tags": [],
+      "sequence": 10,
+      "unlocks": [
+        "WO5",
+        "WO7",
+        "MOOD9",
+        "CL5"
+      ]
+    },
+    {
+      "id": "WO5",
+      "track": "WO",
+      "level": "A2",
+      "title": "Verb last in subordinate clauses",
+      "requires": [
+        "WO4"
+      ],
+      "scope": "weil/dass/wenn/ob clauses send the finite verb to the end. The last of Pienemann's core stages.",
+      "drills": [
+        "ORDER",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 11,
+      "unlocks": [
+        "WO6",
+        "WO8",
+        "REK5",
+        "MOOD2",
+        "CL1"
+      ]
+    },
+    {
+      "id": "CASE3",
+      "track": "CASE",
+      "level": "A2",
+      "title": "Dative: indirect objects and dative verbs",
+      "requires": [
+        "CASE2"
+      ],
+      "scope": "dem/der/dem/den+n; mir, dir, ihm, ihr, uns, euch, ihnen; helfen, danken, gefallen, gehören, gratulieren take dative.",
+      "drills": [
+        "SORT",
+        "PRODUCE",
+        "CLOZE"
+      ],
+      "english_trap": "'help him' is ihm helfen, not ihn.",
+      "tags": [
+        "kasusschloss"
+      ],
+      "sequence": 12,
+      "unlocks": [
+        "WO7",
+        "CASE4",
+        "CASE6",
+        "CASE9",
+        "VERB6",
+        "REK1",
+        "CL2"
+      ]
+    },
+    {
+      "id": "CASE4",
+      "track": "CASE",
+      "level": "A2",
+      "title": "The 14-preposition case lock",
+      "requires": [
+        "CASE2",
+        "CASE3"
+      ],
+      "scope": "Always Akk: für um gegen über (in Rektion). Always Dat: aus von mit zu nach vor unter. Switchers: an auf in.",
+      "drills": [
+        "SORT"
+      ],
+      "english_trap": null,
+      "tags": [
+        "kasusschloss"
+      ],
+      "sequence": 13,
+      "unlocks": [
+        "CASE5",
+        "REK2"
+      ]
+    },
+    {
+      "id": "CASE5",
+      "track": "CASE",
+      "level": "A2",
+      "title": "Two-way prepositions in space: wo? vs. wohin?",
+      "requires": [
+        "CASE4"
+      ],
+      "scope": "Location → Dativ, direction → Akkusativ; the verb pairs liegen/legen, stehen/stellen, sitzen/setzen, hängen.",
+      "drills": [
+        "SORT",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 14,
+      "unlocks": [
+        "REK3"
+      ]
+    },
+    {
+      "id": "CASE6",
+      "track": "CASE",
+      "level": "A2",
+      "title": "Possessives and kein",
+      "requires": [
+        "CASE3"
+      ],
+      "scope": "mein/dein/sein/ihr/unser/euer/ihr take ein-word endings in all cases.",
+      "drills": [
+        "PRODUCE",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 15,
+      "unlocks": [
+        "CASE7"
+      ]
+    },
+    {
+      "id": "VERB5",
+      "track": "VERB",
+      "level": "A2",
+      "title": "Perfekt",
+      "requires": [
+        "VERB1",
+        "VERB3",
+        "WO3"
+      ],
+      "scope": "haben vs. sein (movement/change of state); regular and irregular participles; no ge- with -ieren or inseparable prefixes.",
+      "drills": [
+        "PRODUCE",
+        "SORT",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 16,
+      "unlocks": [
+        "WO8",
+        "VERB7",
+        "VERB8",
+        "VERB10",
+        "MOOD4"
+      ]
+    },
+    {
+      "id": "VERB6",
+      "track": "VERB",
+      "level": "A2",
+      "title": "Reflexive verbs",
+      "requires": [
+        "CASE3",
+        "VERB1"
+      ],
+      "scope": "Accusative reflexive (ich wasche mich) vs. dative when there is another object (ich wasche mir die Hände).",
+      "drills": [
+        "CLOZE",
+        "SORT"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 17,
+      "unlocks": []
+    },
+    {
+      "id": "REK1",
+      "track": "REK",
+      "level": "A2",
+      "title": "Verb valency: who gets the dative, who gets the accusative",
+      "requires": [
+        "CASE3"
+      ],
+      "scope": "geben, schenken, zeigen, erklären: jemandem (Dat) etwas (Akk).",
+      "drills": [
+        "SORT",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 18,
+      "unlocks": []
+    },
+    {
+      "id": "MOOD1",
+      "track": "MOOD",
+      "level": "A2",
+      "title": "Polite chunks",
+      "requires": [
+        "VERB2"
+      ],
+      "scope": "Ich hätte gern..., Ich möchte..., Könnten Sie...?, Würden Sie...? Memorized as phrases before the system.",
+      "drills": [
+        "MEANING",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 19,
+      "unlocks": [
+        "MOOD2"
+      ]
+    },
+    {
+      "id": "CL1",
+      "track": "CL",
+      "level": "A2",
+      "title": "Core subordinators",
+      "requires": [
+        "WO5"
+      ],
+      "scope": "weil, dass, wenn, ob, als; als (once, past) vs. wenn (whenever / if).",
+      "drills": [
+        "SORT",
+        "CLOZE"
+      ],
+      "english_trap": "'when' in the past (one time) is als, not wenn.",
+      "tags": [],
+      "sequence": 20,
+      "unlocks": [
+        "CL2",
+        "CL3",
+        "CL4",
+        "CL5",
+        "ST1"
+      ]
+    },
+    {
+      "id": "WO6",
+      "track": "WO",
+      "level": "B1",
+      "title": "Subordinate clause first: verb, comma, verb",
+      "requires": [
+        "WO5"
+      ],
+      "scope": "Weil es regnet, bleibe ich zu Hause. The whole clause counts as position 1.",
+      "drills": [
+        "ORDER"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 21,
+      "unlocks": []
+    },
+    {
+      "id": "WO7",
+      "track": "WO",
+      "level": "B1",
+      "title": "Middle-field order and nicht",
+      "requires": [
+        "WO4",
+        "CASE3"
+      ],
+      "scope": "Pronoun before noun; dative noun before accusative noun; accusative pronoun before dative pronoun; time-cause-manner-place; where nicht goes.",
+      "drills": [
+        "ORDER",
+        "SORT"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 22,
+      "unlocks": [
+        "ST3"
+      ]
+    },
+    {
+      "id": "CASE7",
+      "track": "CASE",
+      "level": "B1",
+      "title": "Adjective endings",
+      "requires": [
+        "CASE6"
+      ],
+      "scope": "Three patterns: after der-words (weak), after ein-words (mixed), with no article (strong). Teach as 'the ending shows the case if the article didn't'.",
+      "drills": [
+        "PRODUCE",
+        "CLOZE",
+        "SORT"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 23,
+      "unlocks": [
+        "CASE8",
+        "VERB11",
+        "ST2"
+      ]
+    },
+    {
+      "id": "CASE8",
+      "track": "CASE",
+      "level": "B1",
+      "title": "Genitive",
+      "requires": [
+        "CASE7"
+      ],
+      "scope": "des/der, -s/-es on the noun; wegen, trotz, während, statt; spoken German often swaps in von + Dat.",
+      "drills": [
+        "PRODUCE",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 24,
+      "unlocks": [
+        "REK8",
+        "CL7",
+        "ST1"
+      ]
+    },
+    {
+      "id": "CASE9",
+      "track": "CASE",
+      "level": "B1",
+      "title": "n-declension nouns",
+      "requires": [
+        "CASE3"
+      ],
+      "scope": "Herr, Kollege, Student, Mensch take -n/-en outside the nominative singular.",
+      "drills": [
+        "PRODUCE",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 25,
+      "unlocks": []
+    },
+    {
+      "id": "VERB9",
+      "track": "VERB",
+      "level": "B1",
+      "title": "Future and werden",
+      "requires": [
+        "VERB2",
+        "WO3"
+      ],
+      "scope": "werden + infinitive for future and for 'probably'; the three jobs of werden (become, future, passive).",
+      "drills": [
+        "MEANING",
+        "SORT"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 26,
+      "unlocks": [
+        "VERB10"
+      ]
+    },
+    {
+      "id": "VERB10",
+      "track": "VERB",
+      "level": "B1",
+      "title": "Passive, present and past",
+      "requires": [
+        "VERB5",
+        "VERB9"
+      ],
+      "scope": "wird gemacht, wurde gemacht; von + Dat for the agent. Then (B2) passive with modals, Perfekt passive (ist gemacht worden), Zustandspassiv (ist geschlossen).",
+      "drills": [
+        "TRANSFORM",
+        "PRODUCE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 27,
+      "unlocks": [
+        "VERB11"
+      ]
+    },
+    {
+      "id": "VERB7",
+      "track": "VERB",
+      "level": "B1",
+      "title": "Präteritum, including strong-verb stems",
+      "requires": [
+        "VERB5"
+      ],
+      "scope": "war/hatte/modals first, then the strong stems (kam, gab, ging, wusste, brachte). Konjunktiv II is built from these.",
+      "drills": [
+        "PRODUCE",
+        "MEANING"
+      ],
+      "english_trap": null,
+      "tags": [
+        "needed-for:MOOD5"
+      ],
+      "sequence": 28,
+      "unlocks": [
+        "VERB8",
+        "MOOD2",
+        "MOOD5"
+      ]
+    },
+    {
+      "id": "VERB8",
+      "track": "VERB",
+      "level": "B1",
+      "title": "Plusquamperfekt",
+      "requires": [
+        "VERB5",
+        "VERB7"
+      ],
+      "scope": "hatte/war + participle; the 'before the past' tense nachdem demands.",
+      "drills": [
+        "PRODUCE",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 29,
+      "unlocks": [
+        "CL4"
+      ]
+    },
+    {
+      "id": "REK2",
+      "track": "REK",
+      "level": "B1",
+      "title": "Core verb + preposition pairs, fixed-case prepositions",
+      "requires": [
+        "CASE4"
+      ],
+      "scope": "Meaning, preposition and case for ~45 core pairs (warten auf, halten von, Angst haben vor...).",
+      "drills": [
+        "MEANING",
+        "CLOZE",
+        "SORT"
+      ],
+      "english_trap": "English prepositions mislead: wait FOR = warten AUF.",
+      "tags": [
+        "kasusschloss",
+        "diagnosed-gap"
+      ],
+      "sequence": 30,
+      "unlocks": [
+        "REK3"
+      ]
+    },
+    {
+      "id": "REK3",
+      "track": "REK",
+      "level": "B1",
+      "title": "Switcher pairs: an/auf/in + Akk vs. Dat per verb",
+      "requires": [
+        "REK2",
+        "CASE5"
+      ],
+      "scope": "denken an + Akk but teilnehmen an + Dat; bestehen auf + Dat. The ~15 that must be memorized one by one.",
+      "drills": [
+        "SORT",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [
+        "kasusschloss",
+        "diagnosed-gap"
+      ],
+      "sequence": 31,
+      "unlocks": [
+        "REK4",
+        "REK6",
+        "REK7"
+      ]
+    },
+    {
+      "id": "REK4",
+      "track": "REK",
+      "level": "B1",
+      "title": "Question words and pronouns: worauf? / auf wen?",
+      "requires": [
+        "REK3"
+      ],
+      "scope": "Things take wo(r)- and da(r)-: Worauf wartest du? Ich warte darauf. People take preposition + pronoun: Auf wen? Auf ihn.",
+      "drills": [
+        "SORT",
+        "PRODUCE",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [
+        "diagnosed-gap"
+      ],
+      "sequence": 32,
+      "unlocks": [
+        "REK5",
+        "CL7"
+      ]
+    },
+    {
+      "id": "CL3",
+      "track": "CL",
+      "level": "B1",
+      "title": "zu-infinitives: um...zu, ohne...zu, statt...zu",
+      "requires": [
+        "CL1",
+        "WO3"
+      ],
+      "scope": "Es ist schwer, Deutsch zu lernen; um...zu vs. damit (same vs. different subject).",
+      "drills": [
+        "CLOZE",
+        "ORDER",
+        "SORT"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 33,
+      "unlocks": [
+        "REK5"
+      ]
+    },
+    {
+      "id": "REK5",
+      "track": "REK",
+      "level": "B1",
+      "title": "da-compound + clause",
+      "requires": [
+        "REK4",
+        "WO5",
+        "CL3"
+      ],
+      "scope": "Ich freue mich darauf, dass du kommst / dich zu sehen. The da-word points ahead to the clause.",
+      "drills": [
+        "CLOZE",
+        "ORDER"
+      ],
+      "english_trap": "'I look forward to seeing you' has no -ing in German.",
+      "tags": [
+        "diagnosed-gap"
+      ],
+      "sequence": 34,
+      "unlocks": []
+    },
+    {
+      "id": "MOOD2",
+      "track": "MOOD",
+      "level": "B1",
+      "title": "Konjunktiv II present: würde + infinitive, wäre, hätte",
+      "requires": [
+        "MOOD1",
+        "WO5",
+        "VERB7"
+      ],
+      "scope": "Wishes and unreal conditions: Wenn ich Zeit hätte, würde ich kommen. Ich wünschte, ich wäre...",
+      "drills": [
+        "CLOZE",
+        "TRANSFORM",
+        "MEANING"
+      ],
+      "english_trap": "'If I would have' is not German: the wenn-clause takes hätte, not würde... haben.",
+      "tags": [
+        "diagnosed-gap"
+      ],
+      "sequence": 35,
+      "unlocks": [
+        "MOOD3",
+        "MOOD4",
+        "MOOD5"
+      ]
+    },
+    {
+      "id": "MOOD3",
+      "track": "MOOD",
+      "level": "B1",
+      "title": "Konjunktiv II of modals: advice and possibility",
+      "requires": [
+        "MOOD2"
+      ],
+      "scope": "könnte (could), müsste (ought to/should probably), sollte (should), dürfte (probably).",
+      "drills": [
+        "MEANING",
+        "SORT"
+      ],
+      "english_trap": null,
+      "tags": [
+        "diagnosed-gap"
+      ],
+      "sequence": 36,
+      "unlocks": [
+        "ST4"
+      ]
+    },
+    {
+      "id": "CL2",
+      "track": "CL",
+      "level": "B1",
+      "title": "Relative clauses (Nom, Akk, Dat)",
+      "requires": [
+        "CL1",
+        "CASE3"
+      ],
+      "scope": "der/den/dem/die/denen; gender from the noun, case from the role in the relative clause.",
+      "drills": [
+        "CLOZE",
+        "PRODUCE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 37,
+      "unlocks": [
+        "CL7"
+      ]
+    },
+    {
+      "id": "CL4",
+      "track": "CL",
+      "level": "B1",
+      "title": "Time clauses and tense sequence",
+      "requires": [
+        "CL1",
+        "VERB8"
+      ],
+      "scope": "bevor, nachdem (+ Plusquamperfekt), während, seit(dem), bis, sobald.",
+      "drills": [
+        "CLOZE",
+        "SORT"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 38,
+      "unlocks": []
+    },
+    {
+      "id": "WO8",
+      "track": "WO",
+      "level": "B2",
+      "title": "Double infinitive and the Ersatzinfinitiv",
+      "requires": [
+        "WO5",
+        "VERB5",
+        "VERB2"
+      ],
+      "scope": "Ich habe kommen müssen; in a subordinate clause the finite verb jumps in front: dass ich habe kommen müssen.",
+      "drills": [
+        "ORDER",
+        "PRODUCE"
+      ],
+      "english_trap": null,
+      "tags": [
+        "needed-for:MOOD6"
+      ],
+      "sequence": 39,
+      "unlocks": [
+        "MOOD6"
+      ]
+    },
+    {
+      "id": "VERB11",
+      "track": "VERB",
+      "level": "B2",
+      "title": "lassen and participles as adjectives",
+      "requires": [
+        "VERB10",
+        "CASE7"
+      ],
+      "scope": "Ich lasse das Auto reparieren; der schlafende Hund, die geschlossene Tür.",
+      "drills": [
+        "CLOZE",
+        "TRANSFORM"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 40,
+      "unlocks": [
+        "ST2"
+      ]
+    },
+    {
+      "id": "REK6",
+      "track": "REK",
+      "level": "B2",
+      "title": "Adjective + preposition",
+      "requires": [
+        "REK3"
+      ],
+      "scope": "stolz auf, abhängig von, interessiert an, zufrieden mit, verantwortlich für, bekannt für.",
+      "drills": [
+        "MEANING",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 41,
+      "unlocks": [
+        "REK9"
+      ]
+    },
+    {
+      "id": "REK7",
+      "track": "REK",
+      "level": "B2",
+      "title": "Noun + preposition",
+      "requires": [
+        "REK3"
+      ],
+      "scope": "Angst vor, Interesse an, Lust auf, Hoffnung auf, Grund für, Kritik an. Usually mirrors the verb.",
+      "drills": [
+        "MEANING",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 42,
+      "unlocks": [
+        "REK8",
+        "REK9"
+      ]
+    },
+    {
+      "id": "MOOD4",
+      "track": "MOOD",
+      "level": "B2",
+      "title": "Konjunktiv II past: counterfactuals",
+      "requires": [
+        "MOOD2",
+        "VERB5"
+      ],
+      "scope": "Wenn ich das gewusst hätte, wäre ich gekommen. hätte/wäre + participle, haben/sein choice as in Perfekt.",
+      "drills": [
+        "CLOZE",
+        "TRANSFORM"
+      ],
+      "english_trap": null,
+      "tags": [
+        "diagnosed-gap"
+      ],
+      "sequence": 43,
+      "unlocks": [
+        "MOOD6",
+        "MOOD7",
+        "MOOD9"
+      ]
+    },
+    {
+      "id": "MOOD5",
+      "track": "MOOD",
+      "level": "B2",
+      "title": "Synthetic Konjunktiv II of strong verbs",
+      "requires": [
+        "MOOD2",
+        "VERB7"
+      ],
+      "scope": "käme, gäbe, ginge, wüsste, bräuchte, ließe. Built from the Präteritum stem plus umlaut.",
+      "drills": [
+        "PRODUCE",
+        "MEANING"
+      ],
+      "english_trap": null,
+      "tags": [
+        "diagnosed-gap"
+      ],
+      "sequence": 44,
+      "unlocks": [
+        "MOOD8"
+      ]
+    },
+    {
+      "id": "MOOD6",
+      "track": "MOOD",
+      "level": "B2",
+      "title": "Modal double infinitive in Konjunktiv II",
+      "requires": [
+        "MOOD4",
+        "WO8"
+      ],
+      "scope": "Du hättest anrufen sollen. Wenn ich hätte kommen können, ... The hardest structure in TW's diagnostic.",
+      "drills": [
+        "ORDER",
+        "CLOZE",
+        "TRANSFORM"
+      ],
+      "english_trap": "'should have called' → hättest anrufen sollen, never hättest angerufen gesollt.",
+      "tags": [
+        "diagnosed-gap"
+      ],
+      "sequence": 45,
+      "unlocks": []
+    },
+    {
+      "id": "MOOD7",
+      "track": "MOOD",
+      "level": "B2",
+      "title": "als ob / als + Konjunktiv II",
+      "requires": [
+        "MOOD4"
+      ],
+      "scope": "Er tut, als ob er nichts wüsste / als wüsste er nichts (verb right after als).",
+      "drills": [
+        "ORDER",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 46,
+      "unlocks": []
+    },
+    {
+      "id": "CL5",
+      "track": "CL",
+      "level": "B2",
+      "title": "Connector types by word order",
+      "requires": [
+        "CL1",
+        "WO4"
+      ],
+      "scope": "Sort every connector: position 0 (aber, denn), adverb with inversion (deshalb, trotzdem, außerdem), subordinator with verb-final (obwohl, da). Perfect for a SORT sprint.",
+      "drills": [
+        "SORT",
+        "ORDER"
+      ],
+      "english_trap": "trotzdem and obwohl mean nearly the same but take opposite word order.",
+      "tags": [],
+      "sequence": 47,
+      "unlocks": [
+        "CL6"
+      ]
+    },
+    {
+      "id": "CL6",
+      "track": "CL",
+      "level": "B2",
+      "title": "Two-part connectors",
+      "requires": [
+        "CL5"
+      ],
+      "scope": "entweder...oder, weder...noch, sowohl...als auch, nicht nur...sondern auch, je...desto (verb-final, then inversion).",
+      "drills": [
+        "CLOZE",
+        "ORDER"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 48,
+      "unlocks": []
+    },
+    {
+      "id": "CL7",
+      "track": "CL",
+      "level": "B2",
+      "title": "Relative clauses with genitive and prepositions",
+      "requires": [
+        "CL2",
+        "CASE8",
+        "REK4"
+      ],
+      "scope": "dessen/deren; mit dem, über die; wo(r)- after etwas, alles, das.",
+      "drills": [
+        "CLOZE",
+        "PRODUCE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 49,
+      "unlocks": []
+    },
+    {
+      "id": "ST1",
+      "track": "ST",
+      "level": "B2",
+      "title": "Nominal style ↔ verbal style",
+      "requires": [
+        "CASE8",
+        "CL1"
+      ],
+      "scope": "weil er krank war ↔ wegen seiner Krankheit; nachdem er angekommen war ↔ nach seiner Ankunft.",
+      "drills": [
+        "TRANSFORM"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 50,
+      "unlocks": [
+        "ST5"
+      ]
+    },
+    {
+      "id": "REK8",
+      "track": "REK",
+      "level": "C1",
+      "title": "Noun-verb combinations (Funktionsverbgefüge)",
+      "requires": [
+        "REK7",
+        "CASE8"
+      ],
+      "scope": "in Frage kommen, zur Verfügung stellen, Abschied nehmen von, eine Entscheidung treffen, Kritik üben an.",
+      "drills": [
+        "MEANING",
+        "CLOZE",
+        "TRANSFORM"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 51,
+      "unlocks": [
+        "ST5"
+      ]
+    },
+    {
+      "id": "REK9",
+      "track": "REK",
+      "level": "C1",
+      "title": "Extended Rektion inventory",
+      "requires": [
+        "REK6",
+        "REK7"
+      ],
+      "scope": "Grow from the core set to ~200 pairs, ordered by corpus frequency (DWDS).",
+      "drills": [
+        "MEANING",
+        "CLOZE"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 52,
+      "unlocks": []
+    },
+    {
+      "id": "MOOD8",
+      "track": "MOOD",
+      "level": "C1",
+      "title": "Konjunktiv I: reported speech",
+      "requires": [
+        "MOOD5"
+      ],
+      "scope": "er sei, er habe, er komme; switch to Konjunktiv II where Konjunktiv I looks like the indicative (sie haben → sie hätten).",
+      "drills": [
+        "TRANSFORM",
+        "SORT"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 53,
+      "unlocks": []
+    },
+    {
+      "id": "MOOD9",
+      "track": "MOOD",
+      "level": "C1",
+      "title": "Conditionals without wenn",
+      "requires": [
+        "MOOD4",
+        "WO4"
+      ],
+      "scope": "Hätte ich das gewusst, wäre ich gekommen. Sollten Sie Fragen haben, ...",
+      "drills": [
+        "ORDER",
+        "TRANSFORM"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 54,
+      "unlocks": []
+    },
+    {
+      "id": "ST2",
+      "track": "ST",
+      "level": "C1",
+      "title": "Extended participial attributes",
+      "requires": [
+        "VERB11",
+        "CASE7"
+      ],
+      "scope": "die von der Regierung gestern beschlossene Reform. Read right to left from the noun.",
+      "drills": [
+        "TRANSFORM",
+        "ORDER"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 55,
+      "unlocks": []
+    },
+    {
+      "id": "ST3",
+      "track": "ST",
+      "level": "C1",
+      "title": "Modal particles",
+      "requires": [
+        "WO7"
+      ],
+      "scope": "doch, ja, mal, eben, halt, wohl, schon, eigentlich: what each does to tone. Meaning-in-context, not translation.",
+      "drills": [
+        "MEANING"
+      ],
+      "english_trap": "Most have no English word; drill the effect, not a gloss.",
+      "tags": [],
+      "sequence": 56,
+      "unlocks": [
+        "ST5"
+      ]
+    },
+    {
+      "id": "ST4",
+      "track": "ST",
+      "level": "C1",
+      "title": "Subjective modals",
+      "requires": [
+        "MOOD3",
+        "VERB2"
+      ],
+      "scope": "Er soll reich sein (reportedly); er will es gesehen haben (claims); das dürfte stimmen; das müsste klappen.",
+      "drills": [
+        "MEANING",
+        "SORT"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 57,
+      "unlocks": []
+    },
+    {
+      "id": "ST5",
+      "track": "ST",
+      "level": "C2",
+      "title": "Register and idiom",
+      "requires": [
+        "ST1",
+        "ST3",
+        "REK8"
+      ],
+      "scope": "Shift a text between spoken, neutral and written-formal; fixed idioms. Largely outside drill territory: pair with reading and Diktat.",
+      "drills": [
+        "TRANSFORM",
+        "MEANING"
+      ],
+      "english_trap": null,
+      "tags": [],
+      "sequence": 58,
+      "unlocks": []
+    }
+  ]
+}
