@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local exports of progress (personal data)
+kasusschloss-progress-*.json
+
+# Claude Code local settings
+.claude/settings.local.json
