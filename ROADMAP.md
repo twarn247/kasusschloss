@@ -12,6 +12,16 @@ How Kasusschloss grows from four drills into a trainer that follows `curriculum.
   - `content_complete` set per unit.
   - "assumed" and unlock rules defined in `mastery`.
   - `learner.placement_level: "A2"` added.
+- **Step 1 of the build order (sections 1–3):**
+  - The units engine (`js/units.js`), with every drill item tagged with its unit.
+  - Schema-3 history storage with migration.
+  - The **Units** tab.
+  - Bedeutung "Set" gained **Fixed-case** (REK2) and **an/auf/in** (REK3), so a 1-minute sprint can count toward one unit's rate aim.
+  - Calls made while building:
+    - Only scored drill answers count toward a unit (Fade and Cold check don't).
+    - Daily history stores the *mean* time of right answers, each capped at 10 s, so rows can be added up.
+    - "Fluent" uses the *most recent* 1-minute sprint of only that unit, in any Bedeutung mode, against that mode's aim.
+    - Seeded outcomes from pre-schema-3 data are interleaved round-robin, because the old data has no order across items.
 
 ## 1. Unit states
 
@@ -117,7 +127,7 @@ CASE3 completion (dative pronouns and dative verbs) can slot in anywhere: it isn
 
 ## Suggested build order
 
-1. Units engine + drill mapping + history storage (sections 1–3), with a simple unit map. No new drills.
+1. ~~Units engine + drill mapping + history storage (sections 1–3), with a simple unit map.~~ Done.
 2. Heute: improvement summary + session builder (section 5).
 3. Generalize SORT, then the REK3 case drill (completes REK3's content), then MEANING/CLOZE.
 4. Content, one unit per task, in the queue order above. Build PRODUCE, ORDER and TRANSFORM when the first unit that needs them comes up.

@@ -3,19 +3,25 @@ import {$,pick,median,norm,today,shuffle,CV,ui,seg} from "../core.js";
 import {REKTION} from "../data.js";
 import {S,save,rec,itemMed} from "../store.js";
 import {nextItem} from "../scheduler.js";
+import {register,evaluate} from "../units.js";
 
-export const MI=REKTION.pairs.map(p=>({pair:p.pair,c:p.case,en:p.en,sent:p.sentence,conf:p.confusers,syn:p.syn||"",core:!!p.core,trap:p.trap,prep:p.pair.split(" ").pop()}));
+export const MI=REKTION.pairs.map(p=>({pair:p.pair,c:p.case,en:p.en,sent:p.sentence,conf:p.confusers,syn:p.syn||"",core:!!p.core,unit:p.unit,trap:p.trap,prep:p.pair.split(" ").pop()}));
 const MBY=new Map(MI.map(x=>[x.pair,x]));
 MI.forEach(x=>x.conf=x.conf.filter(k=>MBY.has(k)));
 export const MT={de:1600,en:1800,card:3200};          // repair target per answer, ms
 export const MAIM={de:25,en:22,card:12};              // starting aims, correct per minute
 export const MNAME={de:"German → English",en:"English → German",card:"Sentence card"};
+/* item keys are m:<mode>:<pair>; a 1-minute sprint on a single-unit set counts toward that unit's rate aim */
+const unitSprint=u=>h=>h.deck.startsWith("mean-")&&h.set===u&&h.secs===60?MAIM[h.deck.slice(5)]:null;
+register({unitOf:k=>{if(!k.startsWith("m:"))return null;const x=MBY.get(k.split(":").slice(2).join(":"));return x?x.unit:null;},
+  sprintAim:{REK2:unitSprint("REK2"),REK3:unitSprint("REK3")}});
 const cs=c=>c==="A"?"Akk":"Dat";
 export const cfgM={mode:"de",set:"core"};
 let ms={on:false};
 const mk=x=>"m:"+cfgM.mode+":"+x.pair;
-function mPool(){return MI.filter(x=>cfgM.set==="all"||x.core);}
+function mPool(){const s=cfgM.set;return MI.filter(x=>s==="all"||(s==="core"?x.core:x.unit===s));}
 $("mCoreN").textContent=MI.filter(x=>x.core).length;$("mAllN").textContent=MI.length;
+$("mRek2N").textContent=MI.filter(x=>x.unit==="REK2").length;$("mRek3N").textContent=MI.filter(x=>x.unit==="REK3").length;
 seg("segMMode",v=>{cfgM.mode=v;mAbort();mIdle();});
 seg("segMSet",v=>{cfgM.set=v;mAbort();mIdle();});
 
@@ -82,7 +88,7 @@ function mHud(){
   $("mHudC").textContent=ms.c+" right";$("mHudE").textContent=ms.e+" wrong";
 }
 function mScore(ok,rt,shown){
-  const it=ms.cur;rec(mk(it),ok,rt);
+  const it=ms.cur;rec(mk(it),ok,rt,it.unit);
   if(ms.repair&&it.pair in ms.need){if(ok&&rt<MT[cfgM.mode])ms.need[it.pair]--;else ms.need[it.pair]=2;}
   if(ok){ms.c++;ms.rts.push(rt);}else{ms.e++;ms.errs.push(it);}
   mHud();
@@ -119,7 +125,7 @@ export function mAbort(){if(ms.on){ms.on=false;cancelAnimationFrame(ms.raf);}}
 function mFinish(){
   mAbort();
   const rate=ms.c,erate=ms.e,med=median(ms.rts);
-  S.hist.push({d:today(),deck:"mean-"+cfgM.mode,set:cfgM.set,cond:"min",secs:60,c:ms.c,e:ms.e,med:med?Math.round(med):null});save();
+  S.hist.push({d:today(),deck:"mean-"+cfgM.mode,set:cfgM.set,cond:"min",secs:60,c:ms.c,e:ms.e,med:med?Math.round(med):null});evaluate();
   const all=mPool();
   const slow=all.filter(x=>itemMed(mk(x))!=null).sort((a,b)=>itemMed(mk(b))-itemMed(mk(a))).slice(0,5);
   const missed=[...new Set(ms.errs)];
@@ -143,7 +149,7 @@ function mFinish(){
   if($("mRepair"))$("mRepair").onclick=()=>mStart([...fix]);
 }
 function mRepairDone(){
-  ms.on=false;$("mPrompt").className="mprompt";$("mPrompt").textContent="repariert";$("mSub").textContent="";
+  ms.on=false;evaluate();$("mPrompt").className="mprompt";$("mPrompt").textContent="repariert";$("mSub").textContent="";
   $("mOpts").innerHTML="";$("mCardIn").hidden=true;$("mFb").innerHTML="";
   $("mResult").innerHTML=`<div class="row" style="justify-content:center"><button class="btn" id="mAgain2">Run a timed sprint</button></div>`;
   $("mResult").hidden=false;$("mAgain2").onclick=()=>mStart();

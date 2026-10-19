@@ -1,5 +1,6 @@
 {
  "version": 1,
+ "units": {"preps": "CASE4", "articles": "CASE3"},
  "preps": {
    "A": ["für","um","gegen","über"],
    "D": ["aus","von","mit","zu","nach","vor","unter"],
@@ -32,12 +33,12 @@
   {"form":"einem","gender":"n","case":"D"}
  ],
  "fade": [
-  {"id":"pA","label":"Always Akkusativ","text":"für um gegen über","case":"A"},
-  {"id":"pD","label":"Always Dativ","text":"aus von mit zu nach vor unter","case":"D"},
-  {"id":"pW","label":"Switchers","text":"an auf in","case":"W"},
-  {"id":"aA","label":"Akkusativ articles, m f n pl","text":"den die das die","case":"A"},
-  {"id":"aD","label":"Dativ articles, m f n pl","text":"dem der dem den","case":"D"},
-  {"id":"eA","label":"ein-words Akkusativ, m f n","text":"einen eine ein","case":"A"},
-  {"id":"eD","label":"ein-words Dativ, m f n","text":"einem einer einem","case":"D"}
+  {"id":"pA","label":"Always Akkusativ","text":"für um gegen über","case":"A","unit":"CASE4"},
+  {"id":"pD","label":"Always Dativ","text":"aus von mit zu nach vor unter","case":"D","unit":"CASE4"},
+  {"id":"pW","label":"Switchers","text":"an auf in","case":"W","unit":"CASE4"},
+  {"id":"aA","label":"Akkusativ articles, m f n pl","text":"den die das die","case":"A","unit":"CASE3"},
+  {"id":"aD","label":"Dativ articles, m f n pl","text":"dem der dem den","case":"D","unit":"CASE3"},
+  {"id":"eA","label":"ein-words Akkusativ, m f n","text":"einen eine ein","case":"A","unit":"CASE3"},
+  {"id":"eD","label":"ein-words Dativ, m f n","text":"einem einer einem","case":"D","unit":"CASE3"}
  ]
 }

@@ -4,13 +4,17 @@ import {exportJSON,importJSON} from "./store.js";
 import {mAbort} from "./modules/rektion.js";
 import {abort,renderFade} from "./modules/kasus.js";
 import {renderLag} from "./ui/lag.js";
+import {initUnits} from "./units.js";
+import {renderUnits} from "./ui/unitmap.js";
+
+initUnits();
 
 /* tabs */
 document.querySelectorAll("#tabs button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("#tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));
   document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("on",p.id==="p-"+b.dataset.p));
   ui.active=b.dataset.p;if(ui.active!=="sprint")abort();if(ui.active!=="mean")mAbort();
-  if(ui.active==="lag")renderLag();if(ui.active==="fade")renderFade();
+  if(ui.active==="lag")renderLag();if(ui.active==="fade")renderFade();if(ui.active==="units")renderUnits();
 });
 
 /* ---------- BACKUP ---------- */

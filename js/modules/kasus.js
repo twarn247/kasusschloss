@@ -3,14 +3,20 @@ import {$,pick,median,norm,today,CV,CNAME,GNAME,ui,seg} from "../core.js";
 import {KASUS} from "../data.js";
 import {S,save,rec,itemMed,onReplace,replaceState} from "../store.js";
 import {nextItem} from "../scheduler.js";
+import {register,evaluate} from "../units.js";
 
 const PREPS=KASUS.preps,ART=KASUS.articles,NOUNS=KASUS.nouns;
-const PREP_ITEMS=[];for(const c in PREPS)for(const p of PREPS[c])PREP_ITEMS.push({k:"p:"+p,c,label:p,show:()=>p,phrase:false});
-const PHRASE_ITEMS=KASUS.slots.map(({form:f,gender:g,case:c})=>({k:"a:"+f+"-"+g,c,label:f+" ("+(g==="p"?"pl":g)+")",phrase:true,
+const UNIT=KASUS.units;
+const PREP_ITEMS=[];for(const c in PREPS)for(const p of PREPS[c])PREP_ITEMS.push({k:"p:"+p,c,label:p,show:()=>p,phrase:false,unit:UNIT.preps});
+const PHRASE_ITEMS=KASUS.slots.map(({form:f,gender:g,case:c})=>({k:"a:"+f+"-"+g,c,label:f+" ("+(g==="p"?"pl":g)+")",phrase:true,unit:UNIT.articles,
   show:()=>{if(g==="p"){const n=pick(NOUNS.p);return f+" "+(c==="D"?n[1]:n[0]);}return f+" "+pick(NOUNS[g]);}}));
 export const DECKS={prep:PREP_ITEMS,phrase:PHRASE_ITEMS,mixed:PREP_ITEMS.concat(PHRASE_ITEMS)};
 export const AIM={prep:45,phrase:35,mixed:35};       // correct per minute, starting aims
 export const TARGET_MS={prep:900,phrase:1100,mixed:1000};
+/* a 1-minute sprint of one deck counts toward that deck's unit rate aim; Mixed and Scrambled don't */
+const oneMinute=(h,deck)=>h.deck===deck&&h.cond==="min"&&h.secs===60;
+register({unitOf:k=>k.startsWith("p:")?UNIT.preps:k.startsWith("a:")?UNIT.articles:null,
+  sprintAim:{[UNIT.preps]:h=>oneMinute(h,"prep")?AIM.prep:null,[UNIT.articles]:h=>oneMinute(h,"phrase")?AIM.phrase:null}});
 
 /* ---------- SPRINT ---------- */
 let cfg={deck:"prep",cond:"min"};
@@ -59,7 +65,7 @@ function hud(){
 function answer(c){
   if(!sp.on||sp.lock||!sp.cur)return;
   const rt=performance.now()-sp.t0,it=sp.cur,ok=c===it.c;
-  rec(it.k,ok,rt);
+  rec(it.k,ok,rt,it.unit);
   if(sp.repair&&it.k in sp.need){
     if(ok&&rt<TARGET_MS[cfg.deck])sp.need[it.k]--;else sp.need[it.k]=2;
   }
@@ -81,7 +87,7 @@ export function abort(){if(sp.on){sp.on=false;cancelAnimationFrame(sp.raf);}}
 function finish(){
   abort();save();
   const mins=sp.secs/60,rate=sp.c/mins,erate=sp.e/mins,med=median(sp.rts);
-  S.hist.push({d:today(),deck:cfg.deck,cond:cfg.cond,secs:sp.secs,c:sp.c,e:sp.e,med:med?Math.round(med):null});save();
+  S.hist.push({d:today(),deck:cfg.deck,cond:cfg.cond,secs:sp.secs,c:sp.c,e:sp.e,med:med?Math.round(med):null});evaluate();
   const pool=DECKS[cfg.deck];
   const slow=pool.filter(x=>itemMed(x.k)!=null).sort((a,b)=>itemMed(b.k)-itemMed(a.k)).slice(0,5);
   const missed=[...new Map(sp.errs.map(e=>[e.it.k,e])).values()];
@@ -115,7 +121,7 @@ function finish(){
   if(rb){const keys=new Set(missed.map(m=>m.it.k).concat(slow.map(s=>s.k)));rb.onclick=()=>start(pool.filter(x=>keys.has(x.k)));}
 }
 function repairDone(){
-  sp.on=false;$("word").textContent="repariert";$("word").style.color="var(--ok)";$("hands").hidden=true;
+  sp.on=false;evaluate();$("word").textContent="repariert";$("word").style.color="var(--ok)";$("hands").hidden=true;
   $("verdict").textContent="";$("result").innerHTML=`<div class="row" style="justify-content:center"><button class="btn" id="again2">Run a timed sprint</button></div>`;
   $("result").hidden=false;$("again2").onclick=()=>start();
 }
