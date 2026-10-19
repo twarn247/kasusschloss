@@ -1,101 +1,125 @@
 # Roadmap
 
-How Kasusschloss grows from four drills into a trainer that follows `curriculum.json`. That file is the source of truth for what is taught and in what order. Everything here stays within the constraints in `CLAUDE.md`: static files, no build step, offline on iPhone, and saved progress never lost. This is a proposal. Nothing past the "Done" section is built.
+How Kasusschloss grows from four drills into a trainer that follows `curriculum.json`. That file is the source of truth for what is taught, in what order, and by which rules. Everything here stays within the constraints in `CLAUDE.md`: static files, no build step, offline on iPhone, and saved progress never lost. Nothing past the "Done" section is built.
 
 ## Done
 
 - Code split into ES modules (`js/`), with content in `data/*.json`. No change in behavior.
+- Curriculum decisions applied to `curriculum.json` and validated:
+  - REK2/REK3 split by preposition type.
+  - REK3 requires CASE4 only.
+  - MOOD2 no longer requires VERB7.
+  - `content_complete` set per unit.
+  - "assumed" and unlock rules defined in `mastery`.
+  - `learner.placement_level: "A2"` added.
 
-## 1. Load the graph and track unit states
+## 1. Unit states
 
-- Add `curriculum.json` to `CORE` in `sw.js` and load it in `js/data.js` next to the content files.
-- New `js/units.js` holds the rules, all read from the curriculum:
+`js/units.js` reads the rules from `curriculum.json` (`mastery`, `learner`) instead of hard-coding them.
 
-| State | Meaning |
+| State | Rule |
 |---|---|
-| **locked** | Some `requires` unit is not yet working. |
-| **open** | Unlocked, but not enough attempts yet. |
-| **working** | ≥ 85% accuracy over the unit's last 20 attempts. This unlocks dependents. |
-| **fluent** | ≥ 95% accuracy, and at or above the unit's rate aim in a 1-minute sprint of that unit. |
-| **retained** | Still fluent on a check at least 3 days after first reaching fluent. Drops to maintenance review. |
-| **assumed** *(proposed)* | Placed below the learner's level, with no content yet, so treated as known for unlocking (see open question 3). |
+| **locked** | Some `requires` unit is not satisfied. |
+| **open** | Unlocked, not yet working. |
+| **working** | ≥ 85% accuracy over the unit's last 20 attempts. Satisfies dependents. |
+| **fluent** | ≥ 95% accuracy and at or above the unit's rate aim in a 1-minute sprint of that unit. Requires `content_complete`. |
+| **retained** | Still fluent on a check ≥ 3 days after first reaching fluent. Maintenance review only. Requires `content_complete`. |
+| **assumed** | No content, at or below `placement_level` (A2), not tagged `diagnosed-gap`. Satisfies dependents. Shown as **unverified**. Never stored as retained. B1+ is never assumed. |
 
-- A unit falls back from fluent to working if accuracy drops, so states follow real performance and aren't one-way trophies.
-- Units with no content yet still appear in the graph. They show as "not built yet" instead of being hidden.
+- **Unlocking:** a unit unlocks when every unit in `requires` is working, fluent, retained or assumed.
+- **Never re-lock:** once a unit is unlocked, it stays unlocked, even if a prerequisite later drops back or an assumed unit fails its probe.
+  - The four units the app already has (CASE3, CASE4, REK2, REK3) count as unlocked from the first release. Otherwise today's preposition sprint and Bedeutung tab would be locked until CASE3 reaches working.
+- **Partial units:** with `content_complete: false` (currently CASE3 and REK3), a unit can reach working but not fluent or retained, because fluent must mean the whole unit. This blocks nothing, since dependents unlock on working. Progress is stored per item, so practice done now still counts once the missing content arrives.
+- **Placement probe:** when content is built for an assumed unit, the app runs a short probe. Pass → retained. Fail → working. Units downstream that were already unlocked stay unlocked either way.
+- **States follow performance:** a fluent unit falls back to working if accuracy drops. Only "unlocked" is permanent.
 
-## 2. Map the existing drills to units
+## 2. Existing drills → units
 
-Current progress carries over. Item IDs in `S.it` stay the same, and each item gets a `units` list in its data file.
+Item IDs in `S.it` don't change. Each item gets a `units` list (and `core: true/false`) in its data file, so current progress carries over.
 
-| Existing drill / item IDs | Unit | Notes |
+| Existing drill / item IDs | Unit | Coverage |
 |---|---|---|
-| Case sprint, prepositions deck (`p:*`), Hooks, Fade `pA pD pW`, Cold check prepositions | **CASE4** | Full coverage. |
-| Case sprint, article-phrase deck (`a:*`), Fade `aA aD eA eD`, Cold check articles | **CASE3** | Partial: dative articles only. CASE3's pronouns and dative verbs have no items yet. |
-| Bedeutung pairs with für/um/gegen/über/aus/von/mit/zu/nach/vor/unter (57 pairs, 29 core) | **REK2** | See open question 1. |
-| Bedeutung pairs with an/auf/in (28 pairs, 16 core: 20 + Akk, 8 + Dat) | **REK3** | Partial: no drill yet asks for the *case* of a switcher pair (REK3's SORT). The card only asks for the preposition. |
+| Case sprint prepositions (`p:*`), Hooks, Fade `pA pD pW`, Cold check prepositions | **CASE4** | complete |
+| Case sprint article phrases (`a:*`), Fade `aA aD eA eD`, Cold check articles | **CASE3** | partial: dative pronouns and dative verbs missing |
+| Bedeutung pairs with a fixed-case preposition: für/um/gegen/über/aus/von/mit/zu/nach/vor/unter (57 pairs, 29 core) | **REK2** | complete. Preposition + meaning; the case comes from the CASE4 lock. |
+| Bedeutung pairs with an/auf/in (28 pairs, 16 core) | **REK3** | partial: no drill yet for the case each pair takes |
 
-- Sprint history (`S.hist`) seeds the "rate aim" half of fluent. Mixed-unit sprints (Bedeutung "Core"/"All", Case sprint "Mixed") count toward accuracy but not toward a single unit's rate.
-- Rate aims per unit: reuse today's aims (`AIM`, `MAIM`) for the four mapped units. New units set theirs when their content is written.
+- **"Core" is a tag inside a unit, not a unit boundary.** Within REK2 and REK3, core pairs are introduced and drilled first; the rest follow.
+- **Mixed sprints** (Bedeutung "All", Case sprint "Mixed") count toward per-item accuracy, but not toward one unit's 1-minute rate.
+- **Rate aims:** the four mapped units reuse today's aims (`AIM`, `MAIM`). Each new unit sets its own when its content is written.
 
 ## 3. Storage: history that can show improvement
 
-The same `kasusschloss-v2` key gets new fields. It isn't renamed, because older app versions and old exports keep working when fields are only added. Export and import stay one file.
+The same `kasusschloss-v2` key gets new fields. Adding fields keeps older app versions and old exports working, and export/import stays one file.
 
-- `log`: one compact row per item per day practised (tries, wrong, median ms). This is what makes "you used to be slow on X, now you're fast" possible, at word level and summed up to units and tracks. It's small: a few hundred KB per year of daily use.
-- `units`: `{id: {state, since, fluentAt, retainedAt}}`, kept so that state changes and their dates are visible.
-- `seq`: the last 20 attempts per unit, for the working/fluent accuracy rule.
-- `schema: 3` so later migrations know what they're reading. Existing `S.it` data seeds the first row of history. Nothing older can be recovered.
+- `log`: one compact row per item per day practised (tries, wrong, median ms). This drives "you used to struggle with X" at the word level, and summed to sub-skills, units and tracks.
+- `units`: `{id: {state, unlockedAt, since, fluentAt, retainedAt, probe}}`.
+- `seq`: the last 20 attempts per unit, for the working/fluent rules.
+- `schema: 3`. Existing `S.it` data seeds the first history rows. Nothing older can be recovered.
 
 ## 4. Drill engines
 
-One engine per curriculum drill type, driven by data. A unit's content file says which engines it uses.
+One engine per curriculum drill type, driven by data. Every engine records attempts the same way (`rec()` + `log` + unit `seq`).
 
 | Type | Today | To build |
 |---|---|---|
-| SORT | Case sprint | Generalize the bins (Akk/Dat/switcher → any 2–4 labels). |
+| SORT | Case sprint | Generalize the bins to any 2–4 labels. First new use: **REK3 case per switcher pair** (Akk/Dat). |
 | MEANING | Bedeutung multiple choice | Generalize prompt/answer fields. |
-| CLOZE | Sentence card | Generalize: any gap, any accepted answers. |
+| CLOZE | Sentence card | Any gap, any accepted answers. |
 | PRODUCE | – | Cue → typed form, exact match after `norm()`. |
-| ORDER | – | Tap chunks into order. Needed by the whole WO track and MOOD6. |
+| ORDER | – | Tap chunks into order. Needed for WO8 and the WO track. |
 | TRANSFORM | – | Rewrite, graded against a short list of accepted answers. |
-
-Each engine records attempts the same way (`rec()` + `log` + unit `seq`), so the scheduler and the unit rules work for all of them.
 
 ## 5. Opening the app: "Heute"
 
-The first tab answers "what moves me forward today?":
-
-1. **Since last time:** items and units that improved, with former weak spots first. For example, "halten von: 2.4 s with errors → 1.1 s clean" or "REK3 reached working."
+1. **Since last time:** what improved, with former weak spots first, at item and unit level. Units that changed state ("REK3 reached working").
 2. **Today's session** (one Start button), built from the graph:
-   - retention checks that are due (fluent units ≥ 3 days old)
-   - weak items from working units, interleaved 2:1 with stronger items (current scheduler)
-   - a little maintenance on retained units
-   - when there's room, the next open unit, preferring `diagnosed_gaps`, then `sequence`
-3. **Unit map:** each track as a row of units, colored by state, with "ready to move on" when a unit turns fluent and its dependents unlock.
+   - retention checks that are due
+   - weak items from working units, interleaved 2:1 with stronger ones
+   - light maintenance of retained units
+   - when there's room, the next open unit with content, preferring `diagnosed_gaps`, then `sequence`
+3. **Unit map:** the tracks with each unit colored by state. Assumed units are marked unverified, and units without content are marked "not built yet".
 
 The existing tabs stay as free practice.
 
-## 6. Content, one unit at a time
+## 6. Content queue
 
-Each unit's content is its own task, done only when asked: `data/units/<ID>.json` with items, confusers, traps and rate aim. Every task follows "Content accuracy" in `CLAUDE.md`: sources named, doubtful items flagged for review, nothing guessed.
+Each unit's content is its own task, done only when asked: `data/units/<ID>.json` with items, `units`/`core` tags, confusers, traps and a rate aim. Every task follows "Content accuracy" in `CLAUDE.md`.
 
-Graph facts that affect which content to build first:
+**Build-order rule:** when a diagnosed-gap unit is blocked by a contentless unit above A2, that blocker goes to the front of the queue and is built as part of the gap's work, not assumed. Applied to the current graph:
 
-- **REK4** (worauf/darauf) needs only REK3, so it's the next Rektion unit.
-- **MOOD2** (Konjunktiv II present) needs MOOD1, WO5 and **VERB7 (Präteritum stems, B1)**. VERB7 is above the "assumed" line, so it needs content or a placement probe before Konjunktiv II unlocks.
+| Blocker (no content, above A2) | Blocks diagnosed gap | Build it with |
+|---|---|---|
+| VERB7 Präteritum stems (B1) | MOOD5 synthetic Konjunktiv II | the Konjunktiv II work, before MOOD5 |
+| CL3 zu-infinitives (B1) | REK5 da-compound + clause | the Rektion work, before REK5 |
+| WO8 double infinitive (B2) | MOOD6 modal double infinitive in Konjunktiv II | the Konjunktiv II work, before MOOD6 (needs ORDER) |
 
-## Suggested order
+Resulting queue for the diagnosed gaps:
 
-1. Units engine + mapping + history storage (sections 1–3), shown as a simple unit map. No new drills.
+1. REK3 completion: the case-per-pair SORT drill.
+2. REK4.
+3. MOOD2, which unlocks on day one under the placement rule.
+4. MOOD3, MOOD4.
+5. VERB7 → MOOD5.
+6. CL3 → REK5.
+7. WO8 → MOOD6.
+
+CASE3 completion (dative pronouns and dative verbs) can slot in anywhere: it isn't a diagnosed gap, but it caps CASE3 at working until then.
+
+## Day one under these rules
+
+18 units are **assumed** (unverified): WO1–WO5, VERB1–VERB6, CASE1, CASE2, CASE5, CASE6, REK1, MOOD1, CL1.
+
+- **Playable:** CASE3, CASE4, REK2, REK3 (unlocked from the start; see "never re-lock").
+- **Unlocked, needs content:** MOOD2, VERB7, CL3, WO8, WO6, CASE7, VERB9, CL5.
+- **Once CASE3, CASE4, REK2, REK3 reach working**, these also unlock: REK4, REK6, REK7, WO7, CASE9, CL2.
+- Everything else (22 units) stays locked until its prerequisites are worked through.
+
+## Suggested build order
+
+1. Units engine + drill mapping + history storage (sections 1–3), with a simple unit map. No new drills.
 2. Heute: improvement summary + session builder (section 5).
-3. Generalize SORT/MEANING/CLOZE, then build PRODUCE (section 4).
-4. Content: REK3's case SORT, REK4, then VERB7 → MOOD1 → MOOD2, one unit per task.
-5. ORDER and TRANSFORM engines when the first unit that needs them comes up.
+3. Generalize SORT, then the REK3 case drill (completes REK3's content), then MEANING/CLOZE.
+4. Content, one unit per task, in the queue order above. Build PRODUCE, ORDER and TRANSFORM when the first unit that needs them comes up.
 
 Streaks and daily goals come last, if at all: the goal is advancing, not showing up.
-
-## Open questions
-
-1. **REK2 vs. REK3 split.** REK2's title says "fixed-case prepositions", but its example is *warten auf* (a switcher) and it says "~45 core pairs". The app's core set is exactly 45 pairs, 16 of them switchers. Either REK2 = the 45 core pairs (any preposition) and REK3 = the switcher pairs' case, or REK2 = fixed-case pairs only (57) and REK3 = all an/auf/in pairs (28, not ~15). Section 2 assumes the second.
-2. **Partial units.** CASE3 and REK3 only have part of their scope in the app. Should a partial unit be able to reach fluent/retained on what exists, or stay at working until its content is complete?
-3. **Placement.** Proposed: A1 and A2 units count as **assumed** for unlocking, unless they're in `diagnosed_gaps` or `already_in_app`, until a placement probe exists for them. Without this, REK3 stays locked behind CASE5 and the diagnosed MOOD units stay locked behind A1/A2 units that have no content.

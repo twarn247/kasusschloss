@@ -50,10 +50,14 @@
   "mastery": {
     "working": "accuracy >= 85% over the last 20 attempts. Enough to unlock dependents.",
     "fluent": "accuracy >= 95% AND at or above the unit's rate aim in a 1-minute sprint.",
-    "retained": "still fluent on a check at least 3 days after reaching fluent. Only retained units drop to maintenance review."
+    "retained": "still fluent on a check at least 3 days after reaching fluent. Only retained units drop to maintenance review.",
+    "assumed": "Contentless unit (not in learner.already_in_app) at or below learner.placement_level and not tagged diagnosed-gap. Counts as satisfied for unlocking; stored as its own state, never as retained, and shown as unverified. When its content is built it gets a short placement probe: pass -> retained, fail -> working. B1 and above is never assumed.",
+    "unlock": "A unit unlocks when every unit in requires is working, fluent, retained or assumed. Units already unlocked are never re-locked.",
+    "content_complete": "A unit with content_complete=false can reach working from the content that exists, but not fluent or retained. Progress is tracked per item, so it still counts once the missing content is added."
   },
   "learner": {
     "placement": "Roughly A2/B1 (Goethe 'Test your German' 16/30). Treat A1 units and most A2 units as probably known: verify with a short placement probe per unit instead of teaching from scratch.",
+    "placement_level": "A2",
     "diagnosed_gaps": [
       "REK2",
       "REK3",
@@ -85,6 +89,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 1,
       "unlocks": [
         "WO2",
@@ -106,6 +111,7 @@
       ],
       "english_trap": "denn means because but behaves like und, not like weil.",
       "tags": [],
+      "content_complete": false,
       "sequence": 2,
       "unlocks": []
     },
@@ -121,6 +127,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 3,
       "unlocks": [
         "VERB2",
@@ -145,6 +152,7 @@
       ],
       "english_trap": "muss nicht = don't have to; darf nicht = must not.",
       "tags": [],
+      "content_complete": false,
       "sequence": 4,
       "unlocks": [
         "WO3",
@@ -169,6 +177,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 5,
       "unlocks": [
         "WO3",
@@ -192,6 +201,7 @@
       ],
       "english_trap": "English keeps verb parts together: 'I must today work' feels wrong but is the German shape.",
       "tags": [],
+      "content_complete": false,
       "sequence": 6,
       "unlocks": [
         "WO4",
@@ -213,6 +223,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 7,
       "unlocks": [
         "CASE2"
@@ -234,6 +245,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 8,
       "unlocks": [
         "CASE3",
@@ -254,6 +266,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 9,
       "unlocks": []
     },
@@ -272,6 +285,7 @@
       ],
       "english_trap": "'Today I go' → Heute gehe ich, never Heute ich gehe.",
       "tags": [],
+      "content_complete": false,
       "sequence": 10,
       "unlocks": [
         "WO5",
@@ -295,6 +309,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 11,
       "unlocks": [
         "WO6",
@@ -322,6 +337,7 @@
       "tags": [
         "kasusschloss"
       ],
+      "content_complete": false,
       "sequence": 12,
       "unlocks": [
         "WO7",
@@ -350,10 +366,12 @@
       "tags": [
         "kasusschloss"
       ],
+      "content_complete": true,
       "sequence": 13,
       "unlocks": [
         "CASE5",
-        "REK2"
+        "REK2",
+        "REK3"
       ]
     },
     {
@@ -371,10 +389,9 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 14,
-      "unlocks": [
-        "REK3"
-      ]
+      "unlocks": []
     },
     {
       "id": "CASE6",
@@ -391,6 +408,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 15,
       "unlocks": [
         "CASE7"
@@ -414,6 +432,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 16,
       "unlocks": [
         "WO8",
@@ -439,6 +458,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 17,
       "unlocks": []
     },
@@ -457,6 +477,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 18,
       "unlocks": []
     },
@@ -475,6 +496,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 19,
       "unlocks": [
         "MOOD2"
@@ -495,6 +517,7 @@
       ],
       "english_trap": "'when' in the past (one time) is als, not wenn.",
       "tags": [],
+      "content_complete": false,
       "sequence": 20,
       "unlocks": [
         "CL2",
@@ -518,6 +541,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 21,
       "unlocks": []
     },
@@ -537,6 +561,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 22,
       "unlocks": [
         "ST3"
@@ -558,6 +583,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 23,
       "unlocks": [
         "CASE8",
@@ -580,6 +606,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 24,
       "unlocks": [
         "REK8",
@@ -602,6 +629,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 25,
       "unlocks": []
     },
@@ -621,6 +649,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 26,
       "unlocks": [
         "VERB10"
@@ -642,6 +671,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 27,
       "unlocks": [
         "VERB11"
@@ -664,10 +694,10 @@
       "tags": [
         "needed-for:MOOD5"
       ],
+      "content_complete": false,
       "sequence": 28,
       "unlocks": [
         "VERB8",
-        "MOOD2",
         "MOOD5"
       ]
     },
@@ -687,6 +717,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 29,
       "unlocks": [
         "CL4"
@@ -700,7 +731,7 @@
       "requires": [
         "CASE4"
       ],
-      "scope": "Meaning, preposition and case for ~45 core pairs (warten auf, halten von, Angst haben vor...).",
+      "scope": "Meaning, preposition and case for verb + preposition pairs with a fixed-case preposition (halten von, Angst haben vor...).",
       "drills": [
         "MEANING",
         "CLOZE",
@@ -711,10 +742,9 @@
         "kasusschloss",
         "diagnosed-gap"
       ],
+      "content_complete": true,
       "sequence": 30,
-      "unlocks": [
-        "REK3"
-      ]
+      "unlocks": []
     },
     {
       "id": "REK3",
@@ -722,8 +752,7 @@
       "level": "B1",
       "title": "Switcher pairs: an/auf/in + Akk vs. Dat per verb",
       "requires": [
-        "REK2",
-        "CASE5"
+        "CASE4"
       ],
       "scope": "denken an + Akk but teilnehmen an + Dat; bestehen auf + Dat. The ~15 that must be memorized one by one.",
       "drills": [
@@ -735,6 +764,7 @@
         "kasusschloss",
         "diagnosed-gap"
       ],
+      "content_complete": false,
       "sequence": 31,
       "unlocks": [
         "REK4",
@@ -760,6 +790,7 @@
       "tags": [
         "diagnosed-gap"
       ],
+      "content_complete": false,
       "sequence": 32,
       "unlocks": [
         "REK5",
@@ -783,6 +814,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 33,
       "unlocks": [
         "REK5"
@@ -807,6 +839,7 @@
       "tags": [
         "diagnosed-gap"
       ],
+      "content_complete": false,
       "sequence": 34,
       "unlocks": []
     },
@@ -817,8 +850,7 @@
       "title": "Konjunktiv II present: würde + infinitive, wäre, hätte",
       "requires": [
         "MOOD1",
-        "WO5",
-        "VERB7"
+        "WO5"
       ],
       "scope": "Wishes and unreal conditions: Wenn ich Zeit hätte, würde ich kommen. Ich wünschte, ich wäre...",
       "drills": [
@@ -830,6 +862,7 @@
       "tags": [
         "diagnosed-gap"
       ],
+      "content_complete": false,
       "sequence": 35,
       "unlocks": [
         "MOOD3",
@@ -854,6 +887,7 @@
       "tags": [
         "diagnosed-gap"
       ],
+      "content_complete": false,
       "sequence": 36,
       "unlocks": [
         "ST4"
@@ -875,6 +909,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 37,
       "unlocks": [
         "CL7"
@@ -896,6 +931,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 38,
       "unlocks": []
     },
@@ -918,6 +954,7 @@
       "tags": [
         "needed-for:MOOD6"
       ],
+      "content_complete": false,
       "sequence": 39,
       "unlocks": [
         "MOOD6"
@@ -939,6 +976,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 40,
       "unlocks": [
         "ST2"
@@ -959,6 +997,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 41,
       "unlocks": [
         "REK9"
@@ -979,6 +1018,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 42,
       "unlocks": [
         "REK8",
@@ -1003,6 +1043,7 @@
       "tags": [
         "diagnosed-gap"
       ],
+      "content_complete": false,
       "sequence": 43,
       "unlocks": [
         "MOOD6",
@@ -1028,6 +1069,7 @@
       "tags": [
         "diagnosed-gap"
       ],
+      "content_complete": false,
       "sequence": 44,
       "unlocks": [
         "MOOD8"
@@ -1052,6 +1094,7 @@
       "tags": [
         "diagnosed-gap"
       ],
+      "content_complete": false,
       "sequence": 45,
       "unlocks": []
     },
@@ -1070,6 +1113,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 46,
       "unlocks": []
     },
@@ -1089,6 +1133,7 @@
       ],
       "english_trap": "trotzdem and obwohl mean nearly the same but take opposite word order.",
       "tags": [],
+      "content_complete": false,
       "sequence": 47,
       "unlocks": [
         "CL6"
@@ -1109,6 +1154,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 48,
       "unlocks": []
     },
@@ -1129,6 +1175,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 49,
       "unlocks": []
     },
@@ -1147,6 +1194,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 50,
       "unlocks": [
         "ST5"
@@ -1169,6 +1217,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 51,
       "unlocks": [
         "ST5"
@@ -1190,6 +1239,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 52,
       "unlocks": []
     },
@@ -1208,6 +1258,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 53,
       "unlocks": []
     },
@@ -1227,6 +1278,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 54,
       "unlocks": []
     },
@@ -1246,6 +1298,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 55,
       "unlocks": []
     },
@@ -1263,6 +1316,7 @@
       ],
       "english_trap": "Most have no English word; drill the effect, not a gloss.",
       "tags": [],
+      "content_complete": false,
       "sequence": 56,
       "unlocks": [
         "ST5"
@@ -1284,6 +1338,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 57,
       "unlocks": []
     },
@@ -1304,6 +1359,7 @@
       ],
       "english_trap": null,
       "tags": [],
+      "content_complete": false,
       "sequence": 58,
       "unlocks": []
     }
