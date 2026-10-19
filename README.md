@@ -1,9 +1,11 @@
 # Kasusschloss
 
-German case + verb/preposition drill. Plain HTML, no build step, works offline after the first load.
+German case + verb/preposition drill. Static files, no build step, works offline after the first load.
+
+Live at https://twarn247.github.io/kasusschloss/
 
 ## On a Mac
-Double-click `index.html`. It opens in your browser and saves progress there.
+Open the link above. To run a local copy, run `python3 -m http.server` in this folder and open http://localhost:8000. Double-clicking `index.html` no longer works, because the app is split into modules and data files.
 
 ## On iPhone (home-screen app, works offline)
 iOS can't run a local HTML file from the Files app, so host it once:
@@ -18,4 +20,4 @@ iOS can't run a local HTML file from the Files app, so host it once:
 Progress lives in each browser separately. Use Export / Import at the bottom of the app.
 
 ## Updating
-Replace `index.html` and bump the cache name in `sw.js` (`kasusschloss-v3` → `v4`) so phones pick up the new version.
+After changing any app file, bump the cache name in `sw.js` (`kasusschloss-v4` → `v5`) so phones pick up the new version. Drill content is in `data/*.json`.

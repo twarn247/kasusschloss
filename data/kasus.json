@@ -1,0 +1,43 @@
+{
+ "version": 1,
+ "preps": {
+   "A": ["für","um","gegen","über"],
+   "D": ["aus","von","mit","zu","nach","vor","unter"],
+   "W": ["an","auf","in"]
+ },
+ "articles": {
+   "A": {"m":"den","f":"die","n":"das","p":"die"},
+   "D": {"m":"dem","f":"der","n":"dem","p":"den"}
+ },
+ "nouns": {
+   "m": ["Hund","Tisch","Lehrer","Bäcker","Garten"],
+   "f": ["Lampe","Katze","Brücke","Stadt","Frau"],
+   "n": ["Buch","Haus","Kind","Fenster","Auto"],
+   "p": [["Kinder","Kindern"],["Freunde","Freunden"],["Lehrer","Lehrern"],["Bücher","Büchern"],["Frauen","Frauen"],["Autos","Autos"],["Hunde","Hunden"]]
+ },
+ "slots": [
+  {"form":"den","gender":"m","case":"A"},
+  {"form":"die","gender":"f","case":"A"},
+  {"form":"das","gender":"n","case":"A"},
+  {"form":"die","gender":"p","case":"A"},
+  {"form":"dem","gender":"m","case":"D"},
+  {"form":"der","gender":"f","case":"D"},
+  {"form":"dem","gender":"n","case":"D"},
+  {"form":"den","gender":"p","case":"D"},
+  {"form":"einen","gender":"m","case":"A"},
+  {"form":"eine","gender":"f","case":"A"},
+  {"form":"ein","gender":"n","case":"A"},
+  {"form":"einem","gender":"m","case":"D"},
+  {"form":"einer","gender":"f","case":"D"},
+  {"form":"einem","gender":"n","case":"D"}
+ ],
+ "fade": [
+  {"id":"pA","label":"Always Akkusativ","text":"für um gegen über","case":"A"},
+  {"id":"pD","label":"Always Dativ","text":"aus von mit zu nach vor unter","case":"D"},
+  {"id":"pW","label":"Switchers","text":"an auf in","case":"W"},
+  {"id":"aA","label":"Akkusativ articles, m f n pl","text":"den die das die","case":"A"},
+  {"id":"aD","label":"Dativ articles, m f n pl","text":"dem der dem den","case":"D"},
+  {"id":"eA","label":"ein-words Akkusativ, m f n","text":"einen eine ein","case":"A"},
+  {"id":"eD","label":"ein-words Dativ, m f n","text":"einem einer einem","case":"D"}
+ ]
+}

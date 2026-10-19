@@ -25,7 +25,9 @@ data/
 
 Plain `<script type="module">` with relative imports, so there is still no build step. `fetch("data/…json")` works offline because every file is in `CORE`.
 
-## 1. Content as data files
+## 1. Content as data files: done
+
+The split and the content move are done. `validate.html` and the adjective and noun pairs are not.
 
 - Move `V`, `TRAP`, `PREPS`, `ART` and `NOUNS` into JSON as they are. Item IDs stay the same, so history carries over.
 - One schema for every module: `{id, module, prompt, answer, case?, confusers[], trap?, example, tags[], level}`.
@@ -62,7 +64,7 @@ Each module exports the same small interface: `items()`, `drills()` and `render(
 
 ## Suggested order
 
-1. Split the code into modules and move content into data files, with no change in behavior.
+1. ~~Split the code into modules and move content into data files, with no change in behavior.~~ Done.
 2. Store v3 + streaks and goals.
 3. The Heute daily session.
 4. The Konjunktiv II module.

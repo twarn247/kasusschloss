@@ -4,8 +4,15 @@ An offline drill app for German grammar: verb/adjective/noun + preposition + cas
 
 ## Files
 
-- `index.html`: the whole app, with HTML, CSS and JS in one file. Content (the `V` verb array, `TRAP` warnings, `PREPS`, `ART`, `NOUNS`) is inline in the script for now.
-- `sw.js`: the service worker. It serves from the cache first and refreshes the cache in the background. The `CORE` list is precached.
+- `index.html`: markup and CSS. It loads `js/main.js` as a module, and shows a note when opened from `file://`, where modules can't load.
+- `data/rektion.json`: the verb + preposition pairs. Each has `pair`, `case`, `en`, `sentence` (with `___`), `confusers` (other `pair`s), an optional `syn` group (pairs that share a meaning never appear as each other's wrong options), `core`, and an optional `trap` (the English-interference warning).
+- `data/kasus.json`: prepositions by case, articles, nouns, the article-phrase `slots`, and the `fade` lines.
+- `js/core.js`: DOM and text helpers, plus `ui.active` (the open tab).
+- `js/data.js`: loads the JSON with top-level await.
+- `js/store.js`: saved progress `S`, plus `save`, `rec`, `itemMed`, `itemErr`, `replaceState` (reset/import, which fires the `onReplace` hooks), and export/import.
+- `js/scheduler.js`: `weakness()` and `nextItem()`, the shared interleaving and repair sequencing.
+- `js/modules/rektion.js`: the Bedeutung tab. `js/modules/kasus.js`: Case sprint, Fade and Cold check. `js/ui/lag.js`: the Lag board. `js/main.js`: tabs and the backup footer.
+- `sw.js`: the service worker. It serves from the cache first and refreshes the cache in the background. The `CORE` list is precached, with `cache:"reload"` so that one install never mixes old and new files.
 - `manifest.webmanifest` and the icons: what the home-screen install uses.
 
 ## Hard constraints
@@ -27,7 +34,7 @@ An offline drill app for German grammar: verb/adjective/noun + preposition + cas
 ## Shipping a change
 
 1. Every time `index.html` or any file in `CORE` changes, bump `C` in `sw.js` (`kasusschloss-v3` → `v4` and so on). Otherwise installed phones keep serving the old version. Adding a new runtime file means adding it to `CORE` and bumping `C`.
-2. Test locally with `python3 -m http.server` from the repo root. Service workers don't run on `file://`.
+2. Test locally with `python3 -m http.server` from the repo root (`.claude/launch.json` sets this up for the preview pane). Modules, `fetch` and service workers don't run on `file://`. The local service worker serves from the cache first, so after editing, reload twice or unregister it. In Claude's preview pane, `requestAnimationFrame` may never fire, so the sprint clocks never run out. When testing there, stub it with `setTimeout` and add an offset to `performance.now()` to end a sprint.
 3. Push to `main`. Pages redeploys in about a minute. On the phone, open the app twice: the first launch fetches the new version and the second shows it.
 
 ## Learning-design principles

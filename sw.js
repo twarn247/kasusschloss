@@ -1,6 +1,9 @@
-const C="kasusschloss-v3";
-const CORE=["./","index.html","manifest.webmanifest","apple-touch-icon.png","icon-192.png","icon-512.png"];
-self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(CORE)));self.skipWaiting();});
+const C="kasusschloss-v4";
+const CORE=["./","index.html","manifest.webmanifest","apple-touch-icon.png","icon-192.png","icon-512.png",
+  "js/main.js","js/core.js","js/data.js","js/store.js","js/scheduler.js","js/modules/rektion.js","js/modules/kasus.js","js/ui/lag.js",
+  "data/rektion.json","data/kasus.json"];
+// cache:"reload" skips the HTTP cache so one install never mixes old and new files
+self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(CORE.map(u=>new Request(u,{cache:"reload"})))));self.skipWaiting();});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))));self.clients.claim();});
 self.addEventListener("fetch",e=>{
   if(e.request.method!=="GET")return;
