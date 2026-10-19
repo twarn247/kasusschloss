@@ -727,7 +727,7 @@
       "id": "REK2",
       "track": "REK",
       "level": "B1",
-      "title": "Core verb + preposition pairs, fixed-case prepositions",
+      "title": "Verb + preposition pairs, fixed-case prepositions",
       "requires": [
         "CASE4"
       ],
@@ -737,7 +737,7 @@
         "CLOZE",
         "SORT"
       ],
-      "english_trap": "English prepositions mislead: wait FOR = warten AUF.",
+      "english_trap": "English prepositions mislead: be afraid OF = Angst haben VOR, not von.",
       "tags": [
         "kasusschloss",
         "diagnosed-gap"
@@ -754,7 +754,7 @@
       "requires": [
         "CASE4"
       ],
-      "scope": "denken an + Akk but teilnehmen an + Dat; bestehen auf + Dat. The ~15 that must be memorized one by one.",
+      "scope": "denken an + Akk but teilnehmen an + Dat; bestehen auf + Dat. The case has to be memorized pair by pair.",
       "drills": [
         "SORT",
         "CLOZE"
