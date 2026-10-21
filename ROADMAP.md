@@ -32,6 +32,14 @@ How Kasusschloss grows from four drills into a trainer that follows `curriculum.
     - **Retained units** get a round only when nothing else in that drill needs work.
     - **"Improved"** compares the earliest stretch of history (at least 6 answers per item, 30 per unit) with the latest stretch. It needs fewer errors (by 15 points or more) or 15% faster right answers, and never more than 5 points more errors.
     - **"Still weak"** lists items with 10%+ errors or a median slower than the drill's repair target.
+- **Step 3, first part: the REK3 case drill.**
+  - Case sprint has a new **an/auf/in case** deck: Akk or Dat for each of the 28 an/auf/in pairs.
+  - It is built only from the existing pair data (`case`, `sentence`). A miss shows the pair's own example sentence.
+  - All 28 cases were checked against standard Rektion references before shipping. Duden notes that *bestehen auf* occasionally takes Akk; the drill uses the standard Dativ.
+  - New item keys `k:<pair>` count toward REK3.
+  - REK3 is now `content_complete: true`, so it can reach fluent and retained.
+  - Modules can add their own single-unit decks to Case sprint (`addDeck`). Heute adds a round for the new deck.
+  - Calls made while building: starting aim 30/min and a 1.2 s target for the new deck; adjust once real rates come in.
 
 ## 1. Unit states
 
@@ -116,7 +124,7 @@ Each unit's content is its own task, done only when asked: `data/units/<ID>.json
 
 Resulting queue for the diagnosed gaps:
 
-1. REK3 completion: the case-per-pair SORT drill.
+1. ~~REK3 completion: the case-per-pair SORT drill.~~ Done.
 2. REK4.
 3. MOOD2, which unlocks on day one under the placement rule.
 4. MOOD3, MOOD4.
@@ -139,7 +147,8 @@ CASE3 completion (dative pronouns and dative verbs) can slot in anywhere: it isn
 
 1. ~~Units engine + drill mapping + history storage (sections 1–3), with a simple unit map.~~ Done.
 2. ~~Heute: improvement summary + session builder (section 5).~~ Done.
-3. Generalize SORT, then the REK3 case drill (completes REK3's content), then MEANING/CLOZE.
+3. ~~REK3 case drill (completes REK3's content).~~ Done.
+   - Generalizing SORT to arbitrary bins, and MEANING/CLOZE to any prompt and answer fields, waits for the first unit that needs them (CL5 connectors, VERB3 prefixes, REK4, MOOD2), so each engine is shaped by real content.
 4. Content, one unit per task, in the queue order above. Build PRODUCE, ORDER and TRANSFORM when the first unit that needs them comes up.
 
 Streaks and daily goals come last, if at all: the goal is advancing, not showing up.

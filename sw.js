@@ -1,4 +1,4 @@
-const C="kasusschloss-v6";
+const C="kasusschloss-v7";
 const CORE=["./","index.html","manifest.webmanifest","apple-touch-icon.png","icon-192.png","icon-512.png",
   "js/main.js","js/core.js","js/data.js","js/store.js","js/scheduler.js","js/units.js","js/progress.js","js/session.js","js/modules/rektion.js","js/modules/kasus.js","js/ui/lag.js","js/ui/unitmap.js","js/ui/tabs.js","js/ui/heute.js",
   "data/rektion.json","data/kasus.json","curriculum.json"];

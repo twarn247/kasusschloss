@@ -4,6 +4,7 @@ import {REKTION} from "../data.js";
 import {S,save,rec,itemMed} from "../store.js";
 import {nextItem,weakness} from "../scheduler.js";
 import {register,evaluate} from "../units.js";
+import {addDeck} from "./kasus.js";
 
 export const MI=REKTION.pairs.map(p=>({pair:p.pair,c:p.case,en:p.en,sent:p.sentence,conf:p.confusers,syn:p.syn||"",core:!!p.core,unit:p.unit,trap:p.trap,prep:p.pair.split(" ").pop()}));
 const MBY=new Map(MI.map(x=>[x.pair,x]));
@@ -15,6 +16,9 @@ export const MNAME={de:"German → English",en:"English → German",card:"Senten
 const unitSprint=u=>h=>h.deck.startsWith("mean-")&&h.set===u&&h.secs===60?MAIM[h.deck.slice(5)]:null;
 const MSHORT={de:"DE→EN",en:"EN→DE",card:"card"};
 const pairOf=k=>MBY.get(k.split(":").slice(2).join(":"));
+/* REK3's case per pair, as a Case sprint deck: same pairs and cases as the Bedeutung data; a miss shows the pair's example sentence */
+addDeck("rek",{unit:"REK3",aim:30,target:1200,name:"an/auf/in pairs: Akk or Dat?",
+  items:MI.filter(x=>x.unit==="REK3").map(x=>({k:"k:"+x.pair,c:x.c,label:x.pair+" · case",show:()=>x.pair,phrase:true,unit:"REK3",hint:x.sent.replace("___",x.prep)}))});
 const SET_NAME={core:"core pairs",all:"all pairs",REK2:"fixed-case pairs",REK3:"an/auf/in pairs"};
 register({name:"rektion",units:["REK2","REK3"],
   unitOf:k=>{if(!k.startsWith("m:"))return null;const x=pairOf(k);return x?x.unit:null;},

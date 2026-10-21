@@ -11,7 +11,7 @@ function lagSpec(){
   if(lagDeck==="mean"){const m=cfgM.mode;
     return{items:MI.map(x=>({k:"m:"+m+":"+x.pair,c:x.c,label:x.pair})),target:MT[m],hist:"mean-"+m,aim:MAIM[m],dot:CV.W,
       note:"Showing the "+MNAME[m]+" drill. Switch drills on the Bedeutung tab to see the others."};}
-  return{items:DECKS[lagDeck],target:TARGET_MS[lagDeck],hist:lagDeck,aim:AIM[lagDeck],dot:CV[lagDeck==="prep"?"A":"D"],note:""};
+  return{items:DECKS[lagDeck],target:TARGET_MS[lagDeck],hist:lagDeck,aim:AIM[lagDeck],dot:CV[lagDeck==="prep"?"A":lagDeck==="rek"?"W":"D"],note:""};
 }
 export function renderLag(){
   const L=lagSpec();$("lagNote").textContent=L.note;

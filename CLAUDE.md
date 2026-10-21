@@ -21,7 +21,7 @@ Translations, meanings, cases, example sentences and confusers must be correct. 
 ## Files
 
 - `index.html`: markup and CSS. It loads `js/main.js` as a module, and shows a note when opened from `file://`, where modules can't load.
-- `data/rektion.json`: the verb + preposition pairs. Each has `pair`, `case`, `en`, `sentence` (with `___`), `confusers` (other `pair`s), an optional `syn` group (pairs that share a meaning never appear as each other's wrong options), `core` (a tag inside the unit: core pairs come first), `unit` (REK2 for fixed-case prepositions, REK3 for an/auf/in), and an optional `trap` (the English-interference warning).
+- `data/rektion.json`: the verb + preposition pairs. Each has `pair`, `case`, `en`, `sentence` (with `___`), `confusers` (other `pair`s), an optional `syn` group (pairs that share a meaning never appear as each other's wrong options), `core` (a tag inside the unit: core pairs come first), `unit` (REK2 for fixed-case prepositions, REK3 for an/auf/in; REK3 pairs also feed the Case sprint "an/auf/in case" deck, item keys `k:<pair>`), and an optional `trap` (the English-interference warning).
 - `data/kasus.json`: prepositions by case, articles, nouns, the article-phrase `slots`, the `fade` lines (each with its `unit`), and `units` (which unit the preposition and article decks belong to).
 - `js/core.js`: DOM and text helpers, plus `ui.active` (the open tab).
 - `js/data.js`: loads the JSON with top-level await.

@@ -11,21 +11,22 @@ function build(){
   const active=UNITS.filter(u=>hasContent(u)&&st(u.id)&&st(u.id)!=="locked");
   /* 1. retention checks: fluent for 3+ days; a 1-minute sprint of only that unit decides retained */
   const due=active.filter(u=>st(u.id)==="fluent"&&S.units[u.id].fluentAt&&days(S.units[u.id].fluentAt,t)>=3);
-  for(const u of due){const s=specs.find(s=>s.units.includes(u.id)),r=s.round([u.id]);
+  for(const u of due){const s=specs.find(s=>s.units.includes(u.id)),r=[].concat(s.round([u.id]))[0];
     rounds.push({mod:s.name,cfg:r.cfg,kind:"check",units:[u.id],label:"Retention check · "+r.label,
       why:`${u.id} has been fluent since ${S.units[u.id].fluentAt}. Stay at the aim today and it becomes retained.`});}
-  /* 2. practice: one mixed round per drill, weak items first (the scheduler's 2 strong : 1 weak);
+  /* 2. practice: rounds per drill (a module may split its units into several), weak items first (the scheduler's 2 strong : 1 weak);
         diagnosed gaps first; retained units only get a round when nothing else in that drill needs work */
   const groups=specs.map(s=>{const ids=s.units.filter(id=>active.some(u=>u.id===id));
     const work=ids.filter(id=>st(id)!=="retained"&&!due.some(u=>u.id===id));
     return{s,ids:work.length?work:ids.filter(id=>!due.some(u=>u.id===id)),maint:!work.length};}).filter(g=>g.ids.length);
-  const gap=g=>g.ids.some(id=>BY_ID.get(id).tags.includes("diagnosed-gap"));
-  groups.sort((a,b)=>gap(b)-gap(a));
-  for(const g of groups){const r=g.s.round(g.ids,{allWorking:g.ids.every(id=>DONE.has(st(id)))});
-    const names=g.ids.map(id=>id+" ("+st(id)+")").join(", ");
-    rounds.push({mod:g.s.name,cfg:r.cfg,kind:g.maint?"maintenance":"practice",units:g.ids,label:r.label,
+  const practice=[];
+  for(const g of groups)for(const r of [].concat(g.s.round(g.ids,{allWorking:g.ids.every(id=>DONE.has(st(id)))}))){
+    const ids=r.units||g.ids,names=ids.map(id=>id+" ("+st(id)+")").join(", ");
+    practice.push({mod:g.s.name,cfg:r.cfg,kind:g.maint?"maintenance":"practice",units:ids,label:r.label,
       why:g.maint?`Light review: ${names}.`:`${names}. Weak items come up more often, between easier ones.`});}
-  return rounds;
+  const gapRound=r=>r.units.some(id=>BY_ID.get(id).tags.includes("diagnosed-gap"));
+  practice.sort((a,b)=>gapRound(b)-gapRound(a));            // stable: diagnosed gaps first
+  return rounds.concat(practice);
 }
 export function todaysPlan(){
   const t=today();

@@ -15,14 +15,29 @@ export const AIM={prep:45,phrase:35,mixed:35};       // correct per minute, star
 export const TARGET_MS={prep:900,phrase:1100,mixed:1000};
 /* a 1-minute sprint of one deck counts toward that deck's unit rate aim; Mixed and Scrambled don't */
 const oneMinute=(h,deck)=>h.deck===deck&&h.cond==="min"&&h.secs===60;
-const LABEL=new Map(PREP_ITEMS.concat(PHRASE_ITEMS).map(x=>[x.k,x.label]));
 const DECK_NAME={prep:"prepositions",phrase:"article phrases",mixed:"prepositions + article phrases"};
-register({name:"kasus",units:[UNIT.preps,UNIT.articles],
-  unitOf:k=>k.startsWith("p:")?UNIT.preps:k.startsWith("a:")?UNIT.articles:null,label:k=>LABEL.get(k),
-  target:k=>k.startsWith("p:")?TARGET_MS.prep:k.startsWith("a:")?TARGET_MS.phrase:null,
-  round:ids=>{const deck=ids.length>1?"mixed":ids[0]===UNIT.preps?"prep":"phrase";return{cfg:{deck},label:"Case sprint · "+DECK_NAME[deck]};},
-  start:(cfg,onDone)=>startRound(cfg,onDone),
-  sprintAim:{[UNIT.preps]:h=>oneMinute(h,"prep")?AIM.prep:null,[UNIT.articles]:h=>oneMinute(h,"phrase")?AIM.phrase:null}});
+const KEY=new Map();                                  // item key -> {label, unit, target}
+const UNIT_DECK={[UNIT.preps]:"prep",[UNIT.articles]:"phrase"};   // single-unit decks
+const SPEC={name:"kasus",units:[UNIT.preps,UNIT.articles],
+  unitOf:k=>KEY.has(k)?KEY.get(k).unit:null,label:k=>KEY.has(k)?KEY.get(k).label:null,target:k=>KEY.has(k)?KEY.get(k).target:null,
+  /* the CASE units share one round (prepositions, article phrases or mixed); other units' decks get their own */
+  round:ids=>{const own=ids.filter(id=>id===UNIT.preps||id===UNIT.articles),out=[];
+    if(own.length){const deck=own.length>1?"mixed":UNIT_DECK[own[0]];out.push({cfg:{deck},label:"Case sprint · "+DECK_NAME[deck],units:own});}
+    for(const id of ids)if(!own.includes(id)&&UNIT_DECK[id])out.push({cfg:{deck:UNIT_DECK[id]},label:"Case sprint · "+DECK_NAME[UNIT_DECK[id]],units:[id]});
+    return out;},
+  start:(cfg,onDone)=>startRound(cfg,onDone),sprintAim:{}};
+const keyInfo=(items,deck)=>items.forEach(x=>KEY.set(x.k,{label:x.label,unit:x.unit,target:TARGET_MS[deck]}));
+keyInfo(PREP_ITEMS,"prep");keyInfo(PHRASE_ITEMS,"phrase");
+SPEC.sprintAim[UNIT.preps]=h=>oneMinute(h,"prep")?AIM.prep:null;
+SPEC.sprintAim[UNIT.articles]=h=>oneMinute(h,"phrase")?AIM.phrase:null;
+register(SPEC);
+/* another module's single-unit sort deck (bins A/D/W by item.c); it needs a #segDeck and #segLag button with data-v=id */
+export function addDeck(id,{items,unit,aim,target,name}){
+  DECKS[id]=items;AIM[id]=aim;TARGET_MS[id]=target;DECK_NAME[id]=name;UNIT_DECK[unit]=id;keyInfo(items,id);
+  if(!SPEC.units.includes(unit))SPEC.units.push(unit);
+  SPEC.sprintAim[unit]=h=>oneMinute(h,id)?AIM[id]:null;
+}
+const hasW=deck=>DECKS[deck].some(x=>x.c==="W");
 
 /* ---------- SPRINT ---------- */
 let cfg={deck:"prep",cond:"min"};
@@ -30,7 +45,7 @@ let sp={on:false};
 seg("segDeck",v=>{cfg.deck=v;abort();idle();});
 seg("segCond",v=>{cfg.cond=v;abort();idle();});
 function idle(){
-  $("btnW").hidden=cfg.deck==="phrase";
+  $("btnW").hidden=!hasW(cfg.deck);
   $("word").textContent="bereit";$("word").style.cssText="";$("word").className="big";$("verdict").textContent="";
   $("hudT").textContent=(cfg.cond==="endure"?180:60)+"s";$("hudC").textContent="0 right";$("hudE").textContent="0 wrong";
   $("clockBar").style.width="100%";$("startRow").hidden=false;$("result").hidden=true;$("hands").hidden=false;
@@ -53,7 +68,7 @@ function start(repair,round){
   const secs=cfg.cond==="endure"?180:60;
   sp={on:true,repair:!!repair,round:round||null,secs,c:0,e:0,rts:[],errs:[],n:0,cur:null,seen:new Set(),lock:false,pool:null,need:null};
   if(repair){sp.pool=repair;sp.need={};repair.forEach(x=>sp.need[x.k]=2);}
-  $("startRow").hidden=true;$("result").hidden=true;$("hands").hidden=false;$("btnW").hidden=cfg.deck==="phrase";
+  $("startRow").hidden=true;$("result").hidden=true;$("hands").hidden=false;$("btnW").hidden=!hasW(cfg.deck);
   sp.end=performance.now()+secs*1000;
   if(!repair){loop();}else{$("hudT").textContent="repair";$("clockBar").style.width="100%";}
   hud();show();
@@ -86,8 +101,8 @@ function answer(c){
   }else{
     sp.e++;sp.errs.push({it,shown:$("word").textContent,c});
     $("word").style.color=CV[it.c];
-    $("verdict").innerHTML=`<span class="tag ${it.c}">${CNAME[it.c]}</span>`;
-    sp.lock=true;setTimeout(show,800);
+    $("verdict").innerHTML=`<span class="tag ${it.c}">${CNAME[it.c]}</span>`+(it.hint?`<div class="muted" style="font-weight:400;margin-top:4px">${it.hint}</div>`:"");
+    sp.lock=true;setTimeout(show,it.hint?1800:800);
   }
   hud();
 }
@@ -142,7 +157,7 @@ document.addEventListener("keydown",e=>{
   if(!sp.on){if(e.key==="Enter"){e.preventDefault();start();}return;}
   if(k==="f"){e.preventDefault();answer("A");}
   else if(k==="j"){e.preventDefault();answer("D");}
-  else if(e.key===" "){e.preventDefault();if(cfg.deck!=="phrase")answer("W");}
+  else if(e.key===" "){e.preventDefault();if(hasW(cfg.deck))answer("W");}
 });
 
 /* ---------- FADE ---------- */

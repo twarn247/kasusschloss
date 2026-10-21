@@ -764,7 +764,7 @@
         "kasusschloss",
         "diagnosed-gap"
       ],
-      "content_complete": false,
+      "content_complete": true,
       "sequence": 31,
       "unlocks": [
         "REK4",
