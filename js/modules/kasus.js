@@ -1,5 +1,5 @@
 /* Case sprint, Fade and Cold check. Content: data/kasus.json. */
-import {$,pick,median,norm,today,CV,CNAME,GNAME,ui,seg} from "../core.js";
+import {$,pick,median,norm,today,CV,CNAME,GNAME,ui,seg,pressSeg} from "../core.js";
 import {KASUS} from "../data.js";
 import {S,save,rec,itemMed,onReplace,replaceState} from "../store.js";
 import {nextItem} from "../scheduler.js";
@@ -15,7 +15,13 @@ export const AIM={prep:45,phrase:35,mixed:35};       // correct per minute, star
 export const TARGET_MS={prep:900,phrase:1100,mixed:1000};
 /* a 1-minute sprint of one deck counts toward that deck's unit rate aim; Mixed and Scrambled don't */
 const oneMinute=(h,deck)=>h.deck===deck&&h.cond==="min"&&h.secs===60;
-register({unitOf:k=>k.startsWith("p:")?UNIT.preps:k.startsWith("a:")?UNIT.articles:null,
+const LABEL=new Map(PREP_ITEMS.concat(PHRASE_ITEMS).map(x=>[x.k,x.label]));
+const DECK_NAME={prep:"prepositions",phrase:"article phrases",mixed:"prepositions + article phrases"};
+register({name:"kasus",units:[UNIT.preps,UNIT.articles],
+  unitOf:k=>k.startsWith("p:")?UNIT.preps:k.startsWith("a:")?UNIT.articles:null,label:k=>LABEL.get(k),
+  target:k=>k.startsWith("p:")?TARGET_MS.prep:k.startsWith("a:")?TARGET_MS.phrase:null,
+  round:ids=>{const deck=ids.length>1?"mixed":ids[0]===UNIT.preps?"prep":"phrase";return{cfg:{deck},label:"Case sprint · "+DECK_NAME[deck]};},
+  start:(cfg,onDone)=>startRound(cfg,onDone),
   sprintAim:{[UNIT.preps]:h=>oneMinute(h,"prep")?AIM.prep:null,[UNIT.articles]:h=>oneMinute(h,"phrase")?AIM.phrase:null}});
 
 /* ---------- SPRINT ---------- */
@@ -41,9 +47,11 @@ function show(){
   }else{w.style.color="var(--ink)";w.style.transform="";}
   $("verdict").textContent="";sp.t0=performance.now();sp.lock=false;
 }
-function start(repair){
+/* one round of Heute's session: a normal timed sprint; onDone gets the result panel when the clock runs out */
+export function startRound({deck},onDone){pressSeg("segDeck",deck);pressSeg("segCond","min");start(null,onDone);}
+function start(repair,round){
   const secs=cfg.cond==="endure"?180:60;
-  sp={on:true,repair:!!repair,secs,c:0,e:0,rts:[],errs:[],n:0,cur:null,seen:new Set(),lock:false,pool:null,need:null};
+  sp={on:true,repair:!!repair,round:round||null,secs,c:0,e:0,rts:[],errs:[],n:0,cur:null,seen:new Set(),lock:false,pool:null,need:null};
   if(repair){sp.pool=repair;sp.need={};repair.forEach(x=>sp.need[x.k]=2);}
   $("startRow").hidden=true;$("result").hidden=true;$("hands").hidden=false;$("btnW").hidden=cfg.deck==="phrase";
   sp.end=performance.now()+secs*1000;
@@ -119,6 +127,7 @@ function finish(){
   $("again").onclick=()=>start();
   const rb=$("repair");
   if(rb){const keys=new Set(missed.map(m=>m.it.k).concat(slow.map(s=>s.k)));rb.onclick=()=>start(pool.filter(x=>keys.has(x.k)));}
+  if(sp.round)sp.round($("result"));
 }
 function repairDone(){
   sp.on=false;evaluate();$("word").textContent="repariert";$("word").style.color="var(--ok)";$("hands").hidden=true;

@@ -14,10 +14,15 @@ export const hasContent=u=>HAS.has(u.id);
 export const isAssumed=u=>!HAS.has(u.id)&&lv(u.level)<=PLACE&&!u.tags.includes("diagnosed-gap");
 
 /* Drill modules register how their items and sprints map to units:
-   unitOf(itemKey) -> unit id or null; sprintAim[unit](histRow) -> rate aim if the row is a 1-minute sprint of only that unit, else null */
-const specs=[];
+   name; units: the unit ids it drills; unitOf(itemKey) -> unit id or null; label(itemKey) -> display text;
+   sprintAim[unit](histRow) -> rate aim if the row is a 1-minute sprint of only that unit, else null;
+   target(itemKey) -> speed target in ms; round(unitIds) -> {cfg,label} for one session round over those units; start(cfg,onDone) runs it */
+export const specs=[];
 export function register(spec){specs.push(spec);}
-const unitOf=k=>{for(const s of specs){const u=s.unitOf(k);if(u)return u;}return null;};
+export const unitOf=k=>{for(const s of specs){const u=s.unitOf(k);if(u)return u;}return null;};
+export const itemLabel=k=>{for(const s of specs){const l=s.label&&s.label(k);if(l)return l;}return k;};
+/* the drill's per-answer speed target for this item (the same one repair mode uses) */
+export const itemTarget=k=>{for(const s of specs){const t=s.target&&s.target(k);if(t)return t;}return null;};
 
 export function accuracy(id){const s=S.seq[id]||[];return{n:s.length,right:s.reduce((a,b)=>a+b,0)};}
 /* the most recent 1-minute sprint of only this unit, with its aim */
@@ -33,7 +38,7 @@ function perf(u){
   const sp=lastSprint(u.id);
   return right/n>=0.95&&sp&&sp.rate>=sp.aim?"fluent":"working";
 }
-const days=(a,b)=>Math.round((Date.parse(b)-Date.parse(a))/864e5);
+export const days=(a,b)=>Math.round((Date.parse(b)-Date.parse(a))/864e5);
 
 export function evaluate(){
   const t=today();

@@ -137,6 +137,11 @@ details.ref{margin-top:16px}details.ref summary{cursor:pointer;font-weight:700}
 .rgroup{break-inside:avoid;margin-bottom:14px}.rgroup h4{margin:0 0 4px;font-size:17px}
 .rrow{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:3px 0;font-size:15px}
 .rrow span:last-child{text-align:right}
+/* heute */
+.hrounds{margin:0 0 14px;padding-left:22px}.hrounds li{margin:0 0 10px}.hrounds li.done{color:var(--muted)}.hrounds li.next b{text-decoration:underline;text-underline-offset:3px}
+.hrow{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 14px;border-bottom:1px solid var(--line);padding:6px 0}
+.hname{font-weight:700}.hcmp{font-size:15px;font-variant-numeric:tabular-nums}
+.hnext{justify-content:center;margin-bottom:14px}
 /* units */
 .ucounts{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}
 .utrack h3{margin:20px 0 6px}
@@ -172,7 +177,8 @@ footer.backup{margin-top:40px;border-top:2px solid var(--ink);padding-top:12px}
 <p class="sub">Know what each verb + preposition pair means, and which case it takes, before you have time to think about it.</p>
 
 <nav role="tablist" id="tabs">
-  <button role="tab" data-p="mean" aria-selected="true">Bedeutung</button>
+  <button role="tab" data-p="heute" aria-selected="true">Heute</button>
+  <button role="tab" data-p="mean" aria-selected="false">Bedeutung</button>
   <button role="tab" data-p="sprint" aria-selected="false">Case sprint</button>
   <button role="tab" data-p="lag" aria-selected="false">Lag board</button>
   <button role="tab" data-p="hooks" aria-selected="false">Hooks</button>
@@ -181,8 +187,20 @@ footer.backup{margin-top:40px;border-top:2px solid var(--ink);padding-top:12px}
   <button role="tab" data-p="units" aria-selected="false">Units</button>
 </nav>
 
+<!-- HEUTE -->
+<section class="panel on" id="p-heute">
+  <div class="card" id="hSession"></div>
+  <h2>Improved</h2>
+  <p class="muted" style="margin-top:0">Earlier answers compared with your latest ones. Improved means fewer errors or clearly faster, and never more errors than before.</p>
+  <div id="hImproved"></div>
+  <h2>Still weak</h2>
+  <div id="hWeak"></div>
+  <h2>Units</h2>
+  <div id="hUnits"></div>
+</section>
+
 <!-- BEDEUTUNG -->
-<section class="panel on" id="p-mean">
+<section class="panel" id="p-mean">
   <div class="controls">
     <div><span class="lbl">Drill</span><span class="seg" id="segMMode">
       <button data-v="de" aria-pressed="true">German → English</button><button data-v="en" aria-pressed="false">English → German</button><button data-v="card" aria-pressed="false">Sentence card</button></span></div>

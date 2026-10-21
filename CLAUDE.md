@@ -28,7 +28,8 @@ Translations, meanings, cases, example sentences and confusers must be correct. 
 - `js/store.js`: saved progress `S`, plus `save`, `rec(key, ok, ms, unit)` (item stats, daily history and the unit's last 20 outcomes), `itemMed`, `itemErr`, `replaceState` (reset/import, which fires the `onReplace` hooks), and export/import.
 - `js/units.js`: unit states from `curriculum.json` (`evaluate()`), the schema-3 migration, and the registry where drill modules declare which unit each item and sprint belongs to. Every new drill must `register()` its items and pass the unit to `rec()`.
 - `js/scheduler.js`: `weakness()` and `nextItem()`, the shared interleaving and repair sequencing.
-- `js/modules/rektion.js`: the Bedeutung tab. `js/modules/kasus.js`: Case sprint, Fade and Cold check. `js/ui/lag.js`: the Lag board. `js/ui/unitmap.js`: the Units tab. `js/main.js`: tabs and the backup footer.
+- `js/modules/rektion.js`: the Bedeutung tab. `js/modules/kasus.js`: Case sprint, Fade and Cold check. `js/ui/lag.js`: the Lag board. `js/ui/unitmap.js`: the Units tab. `js/ui/heute.js`: the Heute tab (first tab). `js/ui/tabs.js`: `showTab()` and per-tab renderers. `js/main.js`: startup and the backup footer.
+- `js/session.js`: builds Heute's daily plan from unit states (retention checks, then one practice round per drill, diagnosed gaps first) and runs rounds through each module's registered `round()`/`start()`. `js/progress.js`: what improved (earliest vs latest stretch of history, per item and per unit) and what is still weak.
 - `sw.js`: the service worker. It serves from the cache first and refreshes the cache in the background. The `CORE` list is precached, with `cache:"reload"` so that one install never mixes old and new files.
 - `manifest.webmanifest` and the icons: what the home-screen install uses.
 
@@ -42,7 +43,7 @@ Translations, meanings, cases, example sentences and confusers must be correct. 
 
 ## Never break saved progress
 
-- Progress lives in `localStorage` under `"kasusschloss-v2"`. Schema 3 has `{schema, it, hist, fade, cold, log, base, seq, units}`: `log` is `{date: {itemKey: [tries, wrong, ms of right answers]}}`, `base` is the same row format seeded once from `it` for data saved before schema 3, `seq` is the last 20 outcomes per unit, and `units` holds each unit's state and dates. Older data has only `{it, hist, fade, cold}`, and `migrate()` in `js/units.js` upgrades it on load and on import. The app also still reads the older `"kasusschloss-v1"` key.
+- Progress lives in `localStorage` under `"kasusschloss-v2"`. Schema 3 has `{schema, it, hist, fade, cold, log, base, seq, units}`: `log` is `{date: {itemKey: [tries, wrong, ms of right answers]}}`, `base` is the same row format seeded once from `it` for data saved before schema 3, `seq` is the last 20 outcomes per unit, `units` holds each unit's state and dates, and `session` is today's Heute plan (`{d, rounds, i}`). Older data has only `{it, hist, fade, cold}`, and `migrate()` in `js/units.js` upgrades it on load and on import. The app also still reads the older `"kasusschloss-v1"` key.
 - Keep reading `"kasusschloss-v2"`. If the shape has to change, add a versioned migration that reads the old key and writes the new one. Never delete the old key in the same release.
 - Item keys in `S.it` are stable IDs: `p:<prep>`, `a:<article>-<gender>`, and `m:<mode>:<pair>`. Renaming a verb pair or a preposition orphans its history. Add an alias or a migration instead.
 - Export/import must keep working. Import must accept every older export format, including files that have only `it`, `hist`, `fade` and `cold`.

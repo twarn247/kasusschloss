@@ -10,7 +10,9 @@ export const CNAME={A:"Akkusativ",D:"Dativ",W:"Switcher"};
 export const GNAME={m:"masculine",f:"feminine",n:"neuter",p:"plural"};
 
 /* the open tab; keyboard handlers check it */
-export const ui={active:"mean"};
+export const ui={active:"heute"};
 
+/* set a segmented control from code, exactly as a tap would */
+export function pressSeg(id,v){document.querySelector("#"+id+' button[data-v="'+v+'"]').click();}
 export function seg(id,cb){document.querySelectorAll("#"+id+" button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("#"+id+" button").forEach(x=>x.setAttribute("aria-pressed",x===b));cb(b.dataset.v);});}

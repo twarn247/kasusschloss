@@ -22,6 +22,16 @@ How Kasusschloss grows from four drills into a trainer that follows `curriculum.
     - Daily history stores the *mean* time of right answers, each capped at 10 s, so rows can be added up.
     - "Fluent" uses the *most recent* 1-minute sprint of only that unit, in any Bedeutung mode, against that mode's aim.
     - Seeded outcomes from pre-schema-3 data are interleaved round-robin, because the old data has no order across items.
+- **Step 2, Heute** (now the first tab):
+  - Today's session, built once per day and resumable.
+  - What improved, at unit and item level, with former weak spots first.
+  - What is still weak.
+  - Diagnosed-gap units at a glance.
+  - Calls made while building:
+    - **Rounds:** each round is an existing 1-minute sprint. A retention check is a 1-minute sprint of only that unit. Practice is one round per drill over its active units: Bedeutung uses core pairs until both REK units are working, then all pairs, in the mode whose items are weakest. Case sprint uses prepositions, article phrases or mixed.
+    - **Retained units** get a round only when nothing else in that drill needs work.
+    - **"Improved"** compares the earliest stretch of history (at least 6 answers per item, 30 per unit) with the latest stretch. It needs fewer errors (by 15 points or more) or 15% faster right answers, and never more than 5 points more errors.
+    - **"Still weak"** lists items with 10%+ errors or a median slower than the drill's repair target.
 
 ## 1. Unit states
 
@@ -128,7 +138,7 @@ CASE3 completion (dative pronouns and dative verbs) can slot in anywhere: it isn
 ## Suggested build order
 
 1. ~~Units engine + drill mapping + history storage (sections 1–3), with a simple unit map.~~ Done.
-2. Heute: improvement summary + session builder (section 5).
+2. ~~Heute: improvement summary + session builder (section 5).~~ Done.
 3. Generalize SORT, then the REK3 case drill (completes REK3's content), then MEANING/CLOZE.
 4. Content, one unit per task, in the queue order above. Build PRODUCE, ORDER and TRANSFORM when the first unit that needs them comes up.
 

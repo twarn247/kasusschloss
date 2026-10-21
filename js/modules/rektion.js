@@ -1,8 +1,8 @@
 /* Bedeutung: verb + preposition pairs (Rektion). Content: data/rektion.json. */
-import {$,pick,median,norm,today,shuffle,CV,ui,seg} from "../core.js";
+import {$,pick,median,norm,today,shuffle,CV,ui,seg,pressSeg} from "../core.js";
 import {REKTION} from "../data.js";
 import {S,save,rec,itemMed} from "../store.js";
-import {nextItem} from "../scheduler.js";
+import {nextItem,weakness} from "../scheduler.js";
 import {register,evaluate} from "../units.js";
 
 export const MI=REKTION.pairs.map(p=>({pair:p.pair,c:p.case,en:p.en,sent:p.sentence,conf:p.confusers,syn:p.syn||"",core:!!p.core,unit:p.unit,trap:p.trap,prep:p.pair.split(" ").pop()}));
@@ -13,13 +13,28 @@ export const MAIM={de:25,en:22,card:12};              // starting aims, correct 
 export const MNAME={de:"German → English",en:"English → German",card:"Sentence card"};
 /* item keys are m:<mode>:<pair>; a 1-minute sprint on a single-unit set counts toward that unit's rate aim */
 const unitSprint=u=>h=>h.deck.startsWith("mean-")&&h.set===u&&h.secs===60?MAIM[h.deck.slice(5)]:null;
-register({unitOf:k=>{if(!k.startsWith("m:"))return null;const x=MBY.get(k.split(":").slice(2).join(":"));return x?x.unit:null;},
+const MSHORT={de:"DE→EN",en:"EN→DE",card:"card"};
+const pairOf=k=>MBY.get(k.split(":").slice(2).join(":"));
+const SET_NAME={core:"core pairs",all:"all pairs",REK2:"fixed-case pairs",REK3:"an/auf/in pairs"};
+register({name:"rektion",units:["REK2","REK3"],
+  unitOf:k=>{if(!k.startsWith("m:"))return null;const x=pairOf(k);return x?x.unit:null;},
+  /* both units: core pairs first, all pairs once both are working */
+  round:(ids,{allWorking}={})=>{const set=ids.length>1?(allWorking?"all":"core"):ids[0],mode=weakestMode(set);return{cfg:{mode,set},label:"Bedeutung · "+MNAME[mode]+" · "+SET_NAME[set]};},
+  start:(cfg,onDone)=>startRound(cfg,onDone),
+  target:k=>k.startsWith("m:")?MT[k.split(":")[1]]:null,
+  label:k=>{if(!k.startsWith("m:"))return null;const x=pairOf(k);return x?x.pair+" · "+MSHORT[k.split(":")[1]]:null;},
   sprintAim:{REK2:unitSprint("REK2"),REK3:unitSprint("REK3")}});
 const cs=c=>c==="A"?"Akk":"Dat";
 export const cfgM={mode:"de",set:"core"};
 let ms={on:false};
 const mk=x=>"m:"+cfgM.mode+":"+x.pair;
-function mPool(){const s=cfgM.set;return MI.filter(x=>s==="all"||(s==="core"?x.core:x.unit===s));}
+function setPool(s){return MI.filter(x=>s==="all"||(s==="core"?x.core:x.unit===s));}
+function mPool(){return setPool(cfgM.set);}
+/* the drill mode whose items are weakest on average, so a session round trains where it's needed */
+export function weakestMode(set){const pool=setPool(set);let best="de",w=-1;
+  for(const m of ["de","en","card"]){const a=pool.reduce((s,x)=>s+weakness("m:"+m+":"+x.pair),0)/pool.length;if(a>w){w=a;best=m;}}return best;}
+/* one round of Heute's session: a normal 1-minute sprint; onDone gets the result panel when the clock runs out */
+export function startRound({mode,set},onDone){pressSeg("segMMode",mode);pressSeg("segMSet",set);mStart(null,onDone);}
 $("mCoreN").textContent=MI.filter(x=>x.core).length;$("mAllN").textContent=MI.length;
 $("mRek2N").textContent=MI.filter(x=>x.unit==="REK2").length;$("mRek3N").textContent=MI.filter(x=>x.unit==="REK3").length;
 seg("segMMode",v=>{cfgM.mode=v;mAbort();mIdle();});
@@ -67,8 +82,8 @@ function mShow(){
   }
   ms.t0=performance.now();
 }
-function mStart(repair){
-  ms={on:true,repair:!!repair,secs:60,c:0,e:0,rts:[],errs:[],n:0,cur:null,seen:new Set(),lock:false,need:null,pool:repair||null};
+function mStart(repair,round){
+  ms={on:true,repair:!!repair,round:round||null,secs:60,c:0,e:0,rts:[],errs:[],n:0,cur:null,seen:new Set(),lock:false,need:null,pool:repair||null};
   if(repair){ms.need={};repair.forEach(x=>ms.need[x.pair]=2);}
   $("mStartRow").hidden=true;$("mResult").hidden=true;$("mOpts").hidden=cfgM.mode==="card";
   ms.end=performance.now()+ms.secs*1000;
@@ -147,6 +162,7 @@ function mFinish(){
   $("mResult").hidden=false;
   $("mAgain").onclick=()=>mStart();
   if($("mRepair"))$("mRepair").onclick=()=>mStart([...fix]);
+  if(ms.round)ms.round($("mResult"));
 }
 function mRepairDone(){
   ms.on=false;evaluate();$("mPrompt").className="mprompt";$("mPrompt").textContent="repariert";$("mSub").textContent="";
